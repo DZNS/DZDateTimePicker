@@ -42,6 +42,9 @@ The callback, unlike the date picker, responds with an object in the following f
 }
 ```
 
+### Todo
+- [ ] Remove dependencies 
+
 ### License
 DZDateTimePicker is licensed under the MIT License. Please refer to the LICENSE file for more information. 
 
