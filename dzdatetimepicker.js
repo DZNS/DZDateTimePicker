@@ -1,4 +1,4 @@
-'use strict';
+;'use strict';
 
 const slice = Array.prototype.slice
 
@@ -19,7 +19,7 @@ const findParent = (elem, id) => {
   return undefined
 }
 
-(() => {
+;(() => {
 
   const getCalendar = () => {
 
@@ -307,7 +307,7 @@ const findParent = (elem, id) => {
 
 })();
 
-(() => {
+;(() => {
   
   const getTimer = () => {
     return document.getElementById('dz-timer')
