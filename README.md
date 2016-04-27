@@ -1,6 +1,8 @@
 # DZDatePicker
 Functional, Extensible &amp; Simple Date-picker based on moment.js
 
+Demo: http://codepen.io/dezinezync/pen/jqvZYp
+
 ### Setup
 Include `moment.js` in your HTML file
 ```html
