@@ -1,31 +1,31 @@
+'use strict';
+
+const slice = Array.prototype.slice
+
+const findParent = (elem, id) => {
+    
+  while(elem.parentNode) {
+
+    elem = elem.parentNode
+
+    if(elem == document.body || elem == document)
+      return undefined
+
+    if(elem.getAttribute('id') == id)
+      return elem
+
+  }
+
+  return undefined
+}
+
 (() => {
-
-  'use strict';
-
-  const slice = Array.prototype.slice
 
   const getCalendar = () => {
 
     let calendar = document.getElementById("dz-calendar")
     return calendar
 
-  }
-  
-  const findParent = (elem, id) => {
-    
-    while(elem.parentNode) {
-      
-      elem = elem.parentNode
-      
-      if(elem == document.body || elem == document)
-        return undefined
-        
-      if(elem.getAttribute('id') == id)
-        return elem
-        
-    }
-    
-    return undefined
   }
   
   const isInCalendar = (elem) => {
@@ -306,3 +306,184 @@
   })
 
 })();
+
+(() => {
+  
+  const getTimer = () => {
+    return document.getElementById('dz-timer')
+  }
+  
+  const isInTimer = (elem) => {
+    
+    let parent = findParent(elem, 'dz-timer')
+    
+    return parent != document.body && parent != undefined
+    
+  }
+  
+  const drawTimer = () => {
+
+    let markup = `<div id="dz-timer">
+      <select class="hours">`
+    
+    // draw hours dropdown
+    let hours = Array.from(Array(13).keys())
+    hours.shift()
+    markup += hours
+      .map((item) => {
+        return `<option value=${item}>${item}</option>`    
+      }).join(' ')
+    
+    markup += `</select>
+      <select class="minutes">`
+    
+    // draw minutes dropdown
+    markup += Array.from(Array(60).keys())
+    .map((item) => {
+      if(item.toString().length == 1)
+        item = '0' + item
+      return `<option value=${item}>${item}</option>`
+    }).join(' ')
+    
+    // AM, PM
+    markup += `</select>
+      <select class="shift">
+        <option value=0>AM</option>
+        <option value=1>PM</option>
+      </select>`
+       
+    markup +=`</select>
+    </div>`
+    
+    return markup
+  
+  }
+  
+  const cleanUpTimer = (evt, timer) => {
+    
+    evt && evt.preventDefault()
+    
+    if(timer) {
+      
+      timer.classList.remove('active')
+      
+      setTimeout(() => {
+        document.body.removeChild(timer)
+      }, 300)
+      
+    }
+
+    document.body.removeEventListener('click', bodyClick, false)
+
+    return false
+  }
+  
+  const bodyClick = (evt) => {
+    
+    let timer = getTimer()
+    
+    if(timer)
+      if(!timer.classList.contains('active'))
+        document.body.removeChild(timer)
+      else if(!isInTimer(evt.target)) {
+        return cleanUpTimer(evt, timer)
+      }
+    
+    document.body.removeEventListener('click', bodyClick, false);
+  
+  }
+  
+  const didChange = (evt) => {
+       
+    let target = evt.target
+    let timer = getTimer()
+    
+    if(!timer.dataset.onchange)
+      return true
+    
+    let hours = parseInt(timer.children[0].value)
+    let minutes = parseInt(timer.children[1].value)
+    let shift = parseInt(timer.children[2].value)
+    
+    if(shift == 1)
+      hours += 12
+      
+    if(hours == 12 && shift == 0)
+      hours = '00'
+      
+    let fn = window[timer.dataset.onchange]
+    fn && fn({
+      string: hours + ':' + minutes,
+      hours: parseInt(hours),
+      minutes: minutes
+    })
+    
+  }
+  
+  const triggerClick = (evt) => {
+    
+    let phantom = getTimer()
+    
+    if(phantom) {
+      let ignore = cleanUpTimer(evt, phantom)
+      setTimeout(() => {
+        triggerClick(evt)
+      }, 300)
+      return false
+    }
+    
+    let rect = evt.target.getBoundingClientRect()
+    let center = {
+      x: rect.left + (rect.width / 2),
+      y: rect.top + rect.height
+    }
+
+    let timer = drawTimer()
+
+    document.body.insertAdjacentHTML('beforeEnd', timer)
+
+    timer = getTimer()
+    
+    // set the current time
+    let date = new Date()
+    let hours = date.getHours(), minutes = date.getMinutes()
+    
+    timer.children[0].value = hours > 12 ? hours - 12 : hours
+    timer.children[1].value = minutes
+    timer.children[2].value = hours > 12 ? 1 : 0
+    
+    // add the hooks
+    slice.call(timer.children).forEach((item) => {
+      item.addEventListener('change', didChange, false)
+    })
+    
+    if(evt.target.dataset.onchange)
+       timer.dataset.onchange = evt.target.dataset.onchange
+    
+    // position the calendar near the origin point
+    let timerRect = timer.getBoundingClientRect()
+    
+    // the width before showing = actual width * 0.25 
+    let width = timerRect.width * 4
+
+    timer.style.left = (center.x - width/2) + 'px'
+    timer.style.top = (center.y + 16) + 'px'
+
+    timer.classList.add('active')
+    
+    setTimeout(() => {
+      // this needs to be added a second later to prevent ghost click
+      document.body.addEventListener('click', bodyClick, false)
+    }, 500)
+
+    return false
+    
+  }
+
+  let triggers = slice.call(document.querySelectorAll('.timer-trigger'))
+  
+  triggers.forEach((item) => {
+    item.addEventListener('click', triggerClick, false)
+  })
+  
+})()
