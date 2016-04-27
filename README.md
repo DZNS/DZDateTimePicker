@@ -10,7 +10,7 @@ Include `moment.js` in your HTML file
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/2.2.0/moment-range.min.js"></script>
 
 <script src="dzcalendar.js"></script>
-<link type="text/css" href="dzcalendar.css" />
+<link rel="stylesheet" href="dzcalendar.css" />
 ```
 
 ### Usage
