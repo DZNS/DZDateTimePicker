@@ -8,8 +8,10 @@ Include `moment.js` in your HTML file
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/2.2.0/moment-range.min.js"></script>
-
+<!-- For Dev -->
 <script src="dzdatetimepicker.js"></script>
+<!-- For Production -->
+<script src="dzdtp.min.js"></script>
 <link rel="stylesheet" href="dzdatetimepicker.css" />
 ```
 
