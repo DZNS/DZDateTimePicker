@@ -9,8 +9,8 @@ Include `moment.js` in your HTML file
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/2.2.0/moment-range.min.js"></script>
 
-<script src="dzcalendar.js"></script>
-<link rel="stylesheet" href="dzcalendar.css" />
+<script src="dzdatetimepicker.js"></script>
+<link rel="stylesheet" href="dzdatetimepicker.css" />
 ```
 
 ### Date Picker Usage
@@ -20,7 +20,7 @@ You can initiate the date picker by wiring up a *trigger* element like so:
 ```
 
 The few important things to note are:  
-- when `dzcalendar.js` runs, it automatically finds elements with the class `date-trigger` and hooks on to them. No futher configuration is required.
+- when `dzdatetimepicker.js` runs, it automatically finds elements with the class `date-trigger` and hooks on to them. No futher configuration is required.
 - You can set additional, *optional* dataset items like `date-max` and `date-min` to control the selectable items within a range. Both are optional, and you can use only one if desired.
 - the last parameter, `onset` is required if you need a callback when the user selects a date. This is optional, however, your implementation will require it if you need to update the UI. The implementation for this is intentionally left out.
 
