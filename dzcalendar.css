@@ -1,4 +1,12 @@
-#dz-calendar {
+* {
+  box-sizing: inherit;
+}
+html {
+  box-sizing: border-box;
+}
+/* DZDateTimePicker */
+#dz-calendar,
+#dz-timer {
   width: 245px;
   height: auto;
   display: block;
@@ -16,12 +24,14 @@
   will-change: transform, opacity;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
-#dz-calendar.active {
+#dz-calendar.active,
+#dz-timer.active {
   transform: scale(1);
   opacity: 1;
   pointer-events: auto;
 }
-#dz-calendar:before {
+#dz-calendar:before,
+#dz-timer:before {
   content: '';
   width: 12px;
   height: 12px;
@@ -121,3 +131,8 @@
   pointer-events: none;
   opacity: 0.5;
 }
+#dz-timer {
+  width: auto;
+  padding: 8px;
+}
+
