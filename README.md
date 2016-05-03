@@ -9,6 +9,8 @@ Demo: http://codepen.io/dezinezync/pen/jqvZYp
 <script src="dzdatetimepicker.js"></script>
 <!-- For Production -->
 <script src="dzdtp.min.js"></script>
+
+<!-- The stylesheet. You can include your own instead -->
 <link rel="stylesheet" href="dzdatetimepicker.css" />
 ```
 
