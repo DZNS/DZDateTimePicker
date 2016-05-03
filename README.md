@@ -1,13 +1,10 @@
 # DZDateTimePicker
-Functional, Extensible &amp; Simple Date & Timer picker.
+Functional, Extensible &amp; Simple Date-picker without any dependencies..
 
 Demo: http://codepen.io/dezinezync/pen/jqvZYp
 
 ### Setup
-Include `moment.js` in your HTML file
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-range/2.2.0/moment-range.min.js"></script>
 <!-- For Dev -->
 <script src="dzdatetimepicker.js"></script>
 <!-- For Production -->
@@ -43,7 +40,7 @@ The callback, unlike the date picker, responds with an object in the following f
 ```
 
 ### Todo
-- [ ] Remove dependencies 
+- [x] Remove dependencies 
 
 ### License
 DZDateTimePicker is licensed under the MIT License. Please refer to the LICENSE file for more information. 
