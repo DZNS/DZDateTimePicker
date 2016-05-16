@@ -1,19 +1,12 @@
-* {
-  box-sizing: inherit;
-}
-html {
-  box-sizing: border-box;
-}
 /* DZDateTimePicker */
 #dz-calendar,
 #dz-timer {
+  padding-top: 8px;
   width: 245px;
   height: auto;
   display: block;
   padding-bottom: 8px;
   position: absolute;
-  left: 50%;
-  top: 50px;
   background: #FFFFFF;
   box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.16), 0px -1px 1px 0px rgba(0, 0, 0, 0.07), 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
@@ -23,6 +16,7 @@ html {
   opacity: 0;
   will-change: transform, opacity;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  pointer-events: none;
 }
 #dz-calendar.active,
 #dz-timer.active {
@@ -36,6 +30,7 @@ html {
   width: 12px;
   height: 12px;
   border-radius: 2px;
+  pointer-events: auto;
   transform: rotate(45deg);
   z-index: 2;
   position: absolute;
@@ -44,6 +39,32 @@ html {
   margin-left: -6px;
   background-color: white;
   box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.2);
+}
+#dz-calendar {
+  padding: 0;
+  padding-bottom: 8px;
+}
+#dz-calendar .buttons-bar {
+  padding-bottom: 8px;
+}
+#dz-calendar #dz-prev,
+#dz-calendar #dz-next {
+  width: 24px;
+  height: 24px;
+  background-color: inherit;
+  box-shadow: none;
+  padding: 0;
+  background-image: url('../svg/keyboard_arrow_left.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  text-indent: 1000%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#dz-calendar #dz-next {
+  margin-left: 8px;
+  background-image: url('../svg/keyboard_arrow_right.svg');
 }
 #dz-calendar .dz-title {
   font-size: 13px;
@@ -55,6 +76,7 @@ html {
 #dz-calendar .dz-title h4 {
   margin: 0;
   padding: 0;
+  font-size: 13px;
 }
 #dz-calendar .dz-title button {
   margin-left: auto;
@@ -84,12 +106,18 @@ html {
   width: 35px;
   height: 24px;
   display: inline-block;
+  background-color: inherit;
+  box-shadow: none;
   text-align: center;
   line-height: 24px;
+  font-weight: normal;
   font-size: 13px;
   font-feature-settings: "tnum";
   color: rgba(0, 0, 0, 0.87);
   position: relative;
+  padding: 0;
+  text-transform: none;
+  border-radius: 0;
 }
 #dz-calendar .dz-dates > div:hover {
   cursor: pointer;
@@ -107,7 +135,7 @@ html {
   background-color: #EEE;
 }
 #dz-calendar .dz-dates > div.today {
-  color: white;
+  color: #FF5252;
 }
 #dz-calendar .dz-dates > div.today:before {
   content: '';
@@ -120,12 +148,12 @@ html {
   z-index: -1;
   border-radius: 12px;
   background-color: #EEE;
-  background-color: #FF5252;
+  background-color: white;
   will-change: background;
   transition: background 0.2s ease;
 }
 #dz-calendar .dz-dates > div.today:hover:before {
-  background-color: #ff6c6c;
+  background-color: #EEEEEE;
 }
 #dz-calendar .dz-dates > div.selected {
   color: white;
