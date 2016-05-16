@@ -127,6 +127,30 @@ html {
 #dz-calendar .dz-dates > div.today:hover:before {
   background-color: #ff6c6c;
 }
+#dz-calendar .dz-dates > div.selected {
+  color: white;
+}
+#dz-calendar .dz-dates > div.selected:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: block;
+  position: absolute;
+  left: 6px;
+  top: 0px;
+  z-index: -1;
+  border-radius: 12px;
+  background-color: #EEE;
+  will-change: background;
+  transition: background 0.2s ease;
+  background-color: #018AFF;
+}
+#dz-calendar .dz-dates > div.selected:hover {
+  color: #018AFF;
+}
+#dz-calendar .dz-dates > div.selected:hover:before {
+  background-color: #EEEEEE;
+}
 #dz-calendar .dz-dates > div.disabled {
   pointer-events: none;
   opacity: 0.5;
