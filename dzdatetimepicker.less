@@ -1,68 +1,95 @@
-* {
-  box-sizing: inherit;
-}
-
-html {
-  box-sizing: border-box;
-}
-
 /* DZDateTimePicker */
+
+@border: rgba(0,0,0,.12);
+.hideText() {
+  text-indent: 1000%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.monospaced() { font-feature-settings: "tnum"; }
+
 #dz-calendar, #dz-timer {
-  
+  padding-top: 8px;
+  padding-bottom: 8px;
+
   width: 245px;
   height: auto;
   display: block;
-  
+
   padding-bottom: 8px;
-  
+
   position: absolute;
-  left: 50%;
-  top: 50px;
-  
+
   background: #FFFFFF;
   box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.16), 0px -1px 1px 0px rgba(0,0,0,0.07), 0px 2px 4px 0px rgba(0,0,0,0.20);
   border-radius: 2px;
-  
+
   z-index: 3;
-  
+
   transform: scale(0.25);
   transform-origin: 50% top;
   opacity: 0;
   will-change: transform, opacity;
-  
+
   transition: transform 0.2s ease, opacity 0.2s ease;
-  // pointer-events: none;
-  
+  pointer-events: none;
+
   &.active {
-    transform: scale(1);
-    opacity: 1;
-    pointer-events: auto;
-  }
-  
-  &:before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-    
-    transform: rotate(45deg);
-    
-    z-index: 2;
-    
-    position: absolute;
-    left: 50%;
-    top: -6px;
-    margin-left: -6px;
-    
-    background-color: white;
-    box-shadow: -1px -1px 2px rgba(0,0,0,.2);
+      transform: scale(1);
+      opacity: 1;
+      pointer-events: auto;
   }
 
+  &:before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      pointer-events: auto;
+      transform: rotate(45deg);
+
+      z-index: 2;
+
+      position: absolute;
+      left: 50%;
+      top: -6px;
+      margin-left: -6px;
+
+      background-color: white;
+      box-shadow: -1px -1px 2px rgba(0,0,0,.2);
+  }
 }
 
 #dz-calendar {
-  
-  .monospaced() { font-feature-settings: "tnum"; }
+
+  padding: 0;
+  padding-bottom: 8px;
+
+  .buttons-bar {
+    padding-bottom: 8px;
+  }
+
+  #dz-prev, #dz-next {
+    width: 24px;
+    height: 24px;
+    background-color: inherit;
+    box-shadow: none;
+
+    padding: 0;
+
+    background-image: url('../svg/keyboard_arrow_left.svg');
+    background-repeat: no-repeat;
+    background-position: center; 
+
+    display: block;
+    .hideText();
+  }
+
+  #dz-next {
+    margin-left: 8px;
+    background-image: url('../svg/keyboard_arrow_right.svg');
+  }
   
   .dz-title {
     
@@ -75,6 +102,7 @@ html {
     h4 {
       margin: 0;
       padding: 0;
+      font-size: 13px;
     }
     
     button {
@@ -114,15 +142,23 @@ html {
       width: 35px;
       height: 24px;
       display: inline-block;
+
+      background-color: inherit;
+      box-shadow: none;
       
       text-align: center;
       line-height: 24px;
+      font-weight: normal;
       font-size: 13px;
       .monospaced();
       
       color: rgba(0,0,0,.87);
       
       position: relative;
+
+      padding: 0;
+      text-transform: none;
+      border-radius: 0;
       
       .onHover() {
         content: '';
@@ -152,23 +188,23 @@ html {
       
       &.today {
         
-        color: white;
+        color: #FF5252;
         
         &:before {
           .onHover();
-          background-color: #FF5252;
+          background-color: white;
           will-change: background;
           transition: background 0.2s ease;
         }
         
         &:hover {
           &:before {
-            background-color: lighten(#FF5252, 5%);
+            background-color: #EEEEEE;
           }
         }
         
       }
-      
+
       &.selected {
 
         color: white;
