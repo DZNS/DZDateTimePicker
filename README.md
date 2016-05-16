@@ -41,6 +41,11 @@ The callback, unlike the date picker, responds with an object in the following f
 }
 ```
 
+### Notes
+- Both the datepicker and timepicker automatically idenity `<input>` elements. They hook on to the `focus` and `blur` events so the user can use the pickers to set the values directly. 
+- If the pickers detect an `<input>` element, the pickers will update the `value` attribute when the user updates their selection. 
+- When not using an `<input>` element, you can optionally set the attribute `data-date-val=""` and it'll be updated similarly. 
+
 ### Todo
 - [x] Remove dependencies 
 
