@@ -169,6 +169,25 @@ html {
         
       }
       
+      &.selected {
+
+        color: white;
+        &:before {
+          .onHover();
+          will-change: background;
+          transition: background 0.2s ease;
+          background-color: #018AFF;
+        }
+
+        &:hover {
+          color: #018AFF;
+          &:before {
+            background-color: #EEEEEE;
+          }
+        }
+
+      }
+      
       &.disabled {
         pointer-events: none;
         opacity: 0.5;
