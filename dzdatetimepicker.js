@@ -6,6 +6,11 @@
 
   const findParent = (elem, id) => {
       
+    const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
+    
+    if(checker(elem))
+      return elem;
+      
     while(elem.parentNode) {
 
       elem = elem.parentNode
@@ -13,7 +18,7 @@
       if(elem === document.body || elem === document)
         return undefined
 
-      if(elem.getAttribute('id') === id)
+      if(checker(elem))
         return elem
 
     }
@@ -64,10 +69,10 @@
         let previous = new Date(current.getFullYear(), current.getMonth() - 1)
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(previous))
-        let currentDates = calendar.children[2]
+        let currentDates = document.querySelector('#dz-calendar .dz-dates')
         
         calendar.insertAdjacentHTML('beforeEnd', newDates)
-        newDates = calendar.children[3]
+        newDates = calendar.children[calendar.children.length-1]
         
         calendar.removeChild(currentDates)
         
@@ -95,10 +100,10 @@
         let next = new Date(current.getFullYear(), current.getMonth() + 1)
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(next))
-        let currentDates = calendar.children[2]
+        let currentDates = document.querySelector('#dz-calendar .dz-dates')
         
         calendar.insertAdjacentHTML('beforeEnd', newDates)
-        newDates = calendar.children[3]
+        newDates = calendar.children[calendar.children.length-1]
         
         calendar.removeChild(currentDates)
         
@@ -115,7 +120,7 @@
       }
       
       this.bodyClick = (evt) => {
-        
+
         let calendar = this.getCalendar()
 
         if(calendar)
@@ -124,8 +129,6 @@
           else if(!this.isInCalendar(evt.target)) {
             return this.cleanupCalendar(evt, calendar)
           }
-        
-        document.body.removeEventListener('click', this.bodyClick, false);
       
       }
       
@@ -133,7 +136,7 @@
         
         let calendar = this.getCalendar()
         let date = parseInt(evt.target.innerHTML)
-        
+
         let currentString = calendar.dataset.current.split('-')
         date = new Date(currentString[0],currentString[1],date)
 
@@ -167,7 +170,7 @@
         if(!calendar)
           return
            
-        let dates = [].slice.call(calendar.children[2].children)
+        let dates = slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
@@ -194,7 +197,7 @@
           y: rect.top + rect.height
         }
 
-        let target = $(evt.target).parent('date-trigger')
+        let target = findParent(evt.target, 'date-trigger')
         this.source = target
 
         let calendar = this.drawCalendar()
@@ -286,6 +289,12 @@
     drawDates(dates) {
 
       let now = new Date()
+
+      if(this.source.nodeName === 'INPUT' && this.source.value)
+        now = new Date(this.source.value)
+      else if (this.source.dataset.dateVal)
+        now = new Date(this.source.dataset.dateVal)
+      
       let markup = `<div class="dz-dates">`
       let calendar = this.getCalendar()
       
@@ -343,7 +352,9 @@
     }
 
     drawCalendar() {
+
       let now = new Date()
+
       let year = now.getFullYear()
       let month = now.getMonth()
       
@@ -632,8 +643,11 @@
     }
   }
   else {
+    glob.DZDatePicker = DatePicker
+    glob.DZTimePicker = TimePicker
     glob.datePicker = new DatePicker()
     glob.timePicker = new TimePicker()
   }
 
 })(typeof module === "undefined" ? window : module)
+
