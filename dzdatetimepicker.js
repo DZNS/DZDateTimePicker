@@ -156,6 +156,8 @@
 
         if(this.source.nodeName === 'INPUT') {
           this.source.value = val
+          if ('InputEvent' in window)
+            this.source.dispatchEvent(new InputEvent('input'))
         }
         else if(this.source.dataset.dateVal)
           this.source.dataset.dateVal = val
