@@ -54,17 +54,20 @@
   background-color: inherit;
   box-shadow: none;
   padding: 0;
-  background-image: url('../svg/keyboard_arrow_left.svg');
   background-repeat: no-repeat;
   background-position: center;
   display: block;
-  text-indent: 1000%;
-  white-space: nowrap;
-  overflow: hidden;
+  border: none;
+  outline: none;
 }
+
+#dz-calendar #dz-prev:hover,
+#dz-calendar #dz-next:hover {
+  cursor: pointer;
+}
+
 #dz-calendar #dz-next {
   margin-left: 8px;
-  background-image: url('../svg/keyboard_arrow_right.svg');
 }
 #dz-calendar .dz-title {
   font-size: 13px;

@@ -366,8 +366,8 @@
       let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}">
         <div class="dz-title"> 
            <h4>${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
-           <button id="dz-prev"><</button>
-           <button id="dz-next">></button>
+           <button id="dz-prev"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_left</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
+           <button id="dz-next"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_right</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
         </div>
         <div class="dz-days">`
 
