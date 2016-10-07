@@ -457,8 +457,11 @@
         if(hours === 12 && shift === 0)
           hours = '00'
 
-        if(this.source.nodeName === 'INPUT')
+        if(this.source.nodeName === 'INPUT') {
           this.source.value = hours + ':' + minutes
+          if ('InputEvent' in window)
+            this.source.dispatchEvent(new InputEvent('input'))
+        }
           
         let fn = window[this.source.dataset.onchange]
         if(fn) fn({
