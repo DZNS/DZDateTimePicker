@@ -8,7 +8,7 @@ Demo: http://codepen.io/dezinezync/pen/jqvZYp
 <!-- For Dev -->
 <script src="dzdatetimepicker.js"></script>
 <!-- For Production -->
-<script src="dzdtp.min.js"></script>
+<script src="dzdatetimepicker-dist.js"></script>
 
 <!-- The stylesheet. You can include your own instead -->
 <link rel="stylesheet" href="dzdatetimepicker.css" />
@@ -40,6 +40,22 @@ The callback, unlike the date picker, responds with an object in the following f
   "minutes" : 26
 }
 ```
+
+### Range Picker Usage
+To setup a range picker, include the `rangepicker-dist.js` file along with the date-picker sources as mentioned above. Then you can can write simple markup as follows:  
+```html
+<div id="range-picker">
+    <div role="button" class="trigger range-start" data-date-max="2017-05-09" data-date-min="2016-01-01" data-onset="didSetDate">Start</div>
+    <div role="button" class="trigger range-end" data-date-max="2017-05-09" data-date-min="2016-01-01" data-onset="didSetDate">End</div>
+</div>
+```
+
+You can then initialise the range picker as follows:
+```js
+const myRangePicker = new RangePicker(document.getElementById("range-picker"))
+```
+
+The `RangePicker` will then automatically handle all the setup for you and adjust the min-max ranges for the date picker based on the user's input. 
 
 ### Notes
 - Both the datepicker and timepicker automatically idenity `<input>` elements. They hook on to the `focus` and `blur` events so the user can use the pickers to set the values directly. 
