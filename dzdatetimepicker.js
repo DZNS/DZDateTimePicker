@@ -486,7 +486,7 @@
         
         let rect = evt.target.getBoundingClientRect()
         let center = {
-          x: rect.left + (rect.width / 2),
+          x: rect.left - (rect.width / 4),
           y: rect.top + rect.height
         }
 
