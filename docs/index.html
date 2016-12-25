@@ -4,6 +4,54 @@
         <title>index.md</title>
       </head>
       <body>
-        
+        <h1 id="dzdatetimepicker">DZDateTimePicker</h1>
+<p>Functional, Extensible &amp; Simple Date-picker without any dependencies..</p>
+<p>Demo: <a href="http://codepen.io/dezinezync/pen/jqvZYp">http://codepen.io/dezinezync/pen/jqvZYp</a></p>
+<h3 id="setup">Setup</h3>
+<pre><code class="lang-html">&lt;!-- For Dev --&gt;
+&lt;script src=&quot;dzdatetimepicker.js&quot;&gt;&lt;/script&gt;
+&lt;!-- For Production --&gt;
+&lt;script src=&quot;dzdtp.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;!-- The stylesheet. You can include your own instead --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;dzdatetimepicker.css&quot; /&gt;
+</code></pre>
+<h3 id="date-picker-usage">Date Picker Usage</h3>
+<p>You can initiate the date picker by wiring up a <em>trigger</em> element like so:</p>
+<pre><code class="lang-html">&lt;button class=&quot;date-trigger&quot; data-date-max=&quot;2016-05-09&quot; data-date-min=&quot;2016-01-01&quot; data-onset=&quot;didSetDate&quot;&gt;Trigger&lt;/button&gt;
+</code></pre>
+<p>The few important things to note are:  </p>
+<ul>
+<li>when <code>dzdatetimepicker.js</code> runs, it automatically finds elements with the class <code>date-trigger</code> and hooks on to them. No futher configuration is required.</li>
+<li>You can set additional, <em>optional</em> dataset items like <code>date-max</code> and <code>date-min</code> to control the selectable items within a range. Both are optional, and you can use only one if desired.</li>
+<li>the last parameter, <code>onset</code> is required if you need a callback when the user selects a date. This is optional, however, your implementation will require it if you need to update the UI. The implementation for this is intentionally left out.</li>
+</ul>
+<h3 id="timer-picker-usage">Timer Picker Usage</h3>
+<p>You can initiate the time picker by wiring up a <em>trigger</em> element like so:</p>
+<pre><code class="lang-html">&lt;div role=&quot;button&quot; class=&quot;trigger timer-trigger&quot; data-onchange=&quot;didSetTime&quot;&gt;Time Trigger&lt;/div&gt;
+</code></pre>
+<p>When the script loads, it automatically hooks on to elements with the class <code>timer-trigger</code>. No other configuration is necessary. Similar to the date picker, the last parameter, <code>onchange</code> is required if you need a callback when the user selects a date. This is optional, however, your implementation will require it if you need to update the UI. The implementation for this is intentionally left out.</p>
+<p>The callback, unlike the date picker, responds with an object in the following format:</p>
+<pre><code class="lang-json">{
+  &quot;string&quot; : &quot;14:26&quot;,
+  &quot;hours&quot; : 14,
+  &quot;minutes&quot; : 26
+}
+</code></pre>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>Both the datepicker and timepicker automatically idenity <code>&lt;input&gt;</code> elements. They hook on to the <code>focus</code> and <code>blur</code> events so the user can use the pickers to set the values directly. </li>
+<li>If the pickers detect an <code>&lt;input&gt;</code> element, the pickers will update the <code>value</code> attribute when the user updates their selection. </li>
+<li>When not using an <code>&lt;input&gt;</code> element, you can optionally set the attribute <code>data-date-val=&quot;&quot;</code> and it&#39;ll be updated similarly. </li>
+</ul>
+<h3 id="todo">Todo</h3>
+<ul>
+<li>[x] Remove dependencies </li>
+</ul>
+<h3 id="license">License</h3>
+<p>DZDateTimePicker is licensed under the MIT License. Please refer to the LICENSE file for more information. </p>
+<h3 id="author">Author</h3>
+<p>Nikhil Nigade (Dezine Zync Studios)</p>
+
       </body>
     </html>
