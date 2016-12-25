@@ -277,7 +277,7 @@
       
       let year = date.getFullYear()
       let month = date.getMonth()
-      let monthRange = new Date(year, month, 0).getDate()
+      let monthRange = new Date(year, month + 1, 0).getDate()
       let days = []
 
       while(monthRange > 0) {
@@ -655,4 +655,3 @@
   }
 
 })(typeof module === "undefined" ? window : module)
-
