@@ -41,7 +41,8 @@
 
   class DatePicker {
 
-    constructor() {
+    constructor(customClass) {
+      this.customClass = customClass
       this.init()
     }
 
@@ -52,7 +53,6 @@
       this.initialized = true
 
       this.setupHooks()
-
     }
 
     setupHooks() {
@@ -162,6 +162,9 @@
         else if(this.source.dataset.dateVal)
           this.source.dataset.dateVal = val
         
+        if (this.callback)
+          this.callback(this.source, val)
+
         return this.cleanupCalendar(evt, calendar)
         
       }
@@ -199,7 +202,7 @@
           y: rect.top + rect.height
         }
 
-        let target = findParent(evt.target, 'date-trigger')
+        let target = findParent(evt.target, this.customClass || 'date-trigger')
         this.source = target
 
         let calendar = this.drawCalendar()
@@ -240,7 +243,7 @@
 
       }
 
-      let triggers = document.querySelectorAll('.date-trigger')
+      let triggers = document.querySelectorAll(this.customClass ? "." + this.customClass : '.date-trigger')
       triggers = slice.call(triggers)
 
       const attachTrigger = (elem) => {
@@ -392,7 +395,8 @@
         calendar.classList.remove('active')
         
         setTimeout(() => {
-          document.body.removeChild(calendar)
+          if (calendar && calendar.parentNode)
+            calendar.parentNode.removeChild(calendar)
           this.source = undefined
         }, 300)
         
