@@ -17,27 +17,22 @@
       max-width: 400px;
       margin: 60px auto;
     }
-
-    .trigger {
-      display: inline-block;
-      color: blue;
-      text-decoration: underline;
-    }
-    .trigger:last-child {
-      margin-left: 24px;
-    }
-    .trigger:hover {
-      cursor: pointer;
-    }
 </style>
 <link rel="stylesheet" type="text/css" href="../dist/dzdatetimepicker.css">
 <div id="container">
   
   <!-- Only Date -->
-  <div role="button" class="trigger date-trigger" data-date-max="2017-05-09" data-date-min="2016-01-01" data-onset="didSetDate">Date Trigger</div>
+  <input type="date" name="date" placeholder="date"/>
   
   <!-- Only Time -->
-  <div role="button" class="trigger timer-trigger" data-onchange="didSetTime">Time Trigger</div>
+  <input type="time" name="time" placeholder="time"/>
+
+  <!-- Both -->
+  <!-- Always embed a datetime-local input inside a div so the script
+    can automanage things better -->
+  <div>
+    <input type="datetime-local" name="time" placeholder="datetime-local"/>
+  </div>
   
 </div>
 
