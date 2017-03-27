@@ -1,0 +1,33 @@
+{
+  "name": "datetimepicker",
+  "version": "1.2.1",
+  "description": "Functional, Extensible & Simple DateTime picker without any dependencies.",
+  "main": "src/dzdatetimepicker.js",
+  "dependencies": {
+    "babel-cli": "^6.24.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DZNS/DZDateTimePicker.git"
+  },
+  "keywords": [
+    "picker",
+    "date",
+    "time",
+    "html",
+    "javascript",
+    "fallback",
+    "support",
+    "es6"
+  ],
+  "author": "Nikhil Nigade (Dezine Zync Studios LLP.)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DZNS/DZDateTimePicker/issues"
+  },
+  "homepage": "https://github.com/DZNS/DZDateTimePicker#readme"
+}
