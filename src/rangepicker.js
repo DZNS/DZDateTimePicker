@@ -56,4 +56,4 @@
   else
     glob.RangePicker = RangePicker
 
-})(typeof module === "undefined" ? window : module)
+})(typeof module === "undefined" ? window : module);
