@@ -729,9 +729,10 @@ var inputBlur = function inputBlur(evt) {
      * it's value so the user still retains the name of that field in the form
      */
     var inputs = slice.call(document.querySelectorAll('input[type="datetime-local"]'));
-    inputs.forEach(function (input) {
+    inputs.forEach(function (elem) {
 
       // create a reference for the parent node because we need it later
+      var input = elem;
       var container = input.parentNode;
       var getTarget = function getTarget() {
         return container.querySelector("input[data-original='datetime-local']");
@@ -768,6 +769,28 @@ var inputBlur = function inputBlur(evt) {
       inTime.type = checks.time ? "time" : "text";
       inTime.placeholder = "Time";
       inTime.oninput = timeChange;
+
+      [inDate, inTime].forEach(function (inp) {
+        inp.__defineGetter__("required", function () {
+          return input.required;
+        });
+
+        inp.__defineGetter__("validity", function () {
+          return input.validity;
+        });
+
+        inp.__defineGetter__("pattern", function () {
+          return input.pattern;
+        });
+
+        inp.__defineGetter__("validationMessage", function () {
+          return input.validationMessage;
+        });
+
+        inp.__defineSetter__("validationMessage", function (val) {
+          input.validationMessage = val;
+        });
+      });
 
       // add them to the DOM after the OG
       container.insertAdjacentElement("beforeEnd", inDate);

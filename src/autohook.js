@@ -43,9 +43,10 @@
      * it's value so the user still retains the name of that field in the form
      */
     let inputs = slice.call(document.querySelectorAll('input[type="datetime-local"]'))
-    inputs.forEach(input => {
+    inputs.forEach(elem => {
       
       // create a reference for the parent node because we need it later
+      const input = elem
       const container = input.parentNode
       const getTarget = () => container.querySelector("input[data-original='datetime-local']")
       
@@ -79,7 +80,29 @@
       let inTime = document.createElement("input")
       inTime.type = checks.time ? "time" : "text"
       inTime.placeholder = "Time"
-      inTime.oninput = timeChange
+      inTime.oninput = timeChange;
+      
+      [inDate, inTime].forEach(inp => {
+        inp.__defineGetter__("required", function() {
+          return input.required
+        })
+
+        inp.__defineGetter__("validity", function() {
+          return input.validity
+        })
+
+        inp.__defineGetter__("pattern", function() {
+          return input.pattern
+        })
+
+        inp.__defineGetter__("validationMessage", function() {
+          return input.validationMessage
+        })
+
+        inp.__defineSetter__("validationMessage", function(val) {
+          input.validationMessage = val
+        })
+      })
 
       // add them to the DOM after the OG
       container.insertAdjacentElement("beforeEnd", inDate)
