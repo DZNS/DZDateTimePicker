@@ -1,13 +1,22 @@
 # DZDateTimePicker
-Functional, Extensible &amp; Simple Date-picker without any dependencies..
+Functional, Extensible &amp; Simple Date and Time picker without any dependencies.  
 
-Demo: http://codepen.io/dezinezync/pen/jqvZYp
+DZDateTimePicker also automatically adds support for:  
+```html
+input[type="date"]
+input[type="time"]
+input[type="datetime-local"]
+```
+if they are not supported natively. You don't have to do anything extra. The library will handle the setup for you. You simply have to query the `.value` of your original input elements and you're all set.  
+
+### Demos  
+The related demos are in the `demo` folder of this repo.  
+On a related note:   
+- All source files are in the `src` directory.
+- All distribution files are in the `dist` directory (which you should use for production sites)
 
 ### Setup
 ```html
-<!-- For Dev -->
-<script src="dzdatetimepicker.js"></script>
-<!-- For Production -->
 <script src="dzdatetimepicker-dist.js"></script>
 
 <!-- The stylesheet. You can include your own instead -->
@@ -15,18 +24,30 @@ Demo: http://codepen.io/dezinezync/pen/jqvZYp
 ```
 
 ### Date Picker Usage
-You can initiate the date picker by wiring up a *trigger* element like so:
+Simply,
+```html
+<input type="datetime-local" name="epoch-start" />
+```
+DZDateTimePicker will allow native browser implementations to take over if they exist. If they don't, the library will do it's own wiring for you. 
+
+
+You can optionally initiate the date picker by wiring up a *trigger* element like so:
 ```html
 <button class="date-trigger" data-date-max="2016-05-09" data-date-min="2016-01-01" data-onset="didSetDate">Trigger</button>
 ```
 
 The few important things to note are:  
-- when `dzdatetimepicker.js` runs, it automatically finds elements with the class `date-trigger` and hooks on to them. No futher configuration is required.
+- when `dzdatetimepicker-dsit.js` runs, it automatically finds elements with the class `date-trigger` and hooks on to them. No futher configuration is required.
 - You can set additional, *optional* dataset items like `date-max` and `date-min` to control the selectable items within a range. Both are optional, and you can use only one if desired.
 - the last parameter, `onset` is required if you need a callback when the user selects a date. This is optional, however, your implementation will require it if you need to update the UI. The implementation for this is intentionally left out.
 
 ### Timer Picker Usage
-You can initiate the time picker by wiring up a *trigger* element like so:
+Simply,
+```html
+<input type="time" name="epoch-start" />
+```
+
+You can optionally initiate the time picker by wiring up a *trigger* element like so:
 ```html
 <div role="button" class="trigger timer-trigger" data-onchange="didSetTime">Time Trigger</div>
 ```
@@ -64,6 +85,10 @@ The `RangePicker` will then automatically handle all the setup for you and adjus
 
 ### Todo
 - [x] Remove dependencies 
+- [x] Structure the repo properly
+- [x] Add source maps to distribution files
+- [x] Prepros for handling distribution process
+- [x] lint all source js files
 
 ### License
 DZDateTimePicker is licensed under the MIT License. Please refer to the LICENSE file for more information. 
