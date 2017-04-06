@@ -1,1 +1,61 @@
-"use strict";function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var _createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}();!function(e){var t=function(){function e(t){_classCallCheck(this,e),this.elem=t,this.initialized=!1,this.init()}return _createClass(e,[{key:"init",value:function(){if(this.elem&&!this.initialized){this.initialized=!0;var e=+new Date;this.startElem=this.elem.querySelector(".range-start"),this.endElem=this.elem.querySelector(".range-end"),this.startElem.classList.add("start"+e),this.endElem.classList.add("end"+e),this.startController=new DZDatePicker("start"+e),this.endController=new DZDatePicker("end"+e),this.startController.callback=this.callback.bind(this),this.endController.callback=this.startController.callback}}},{key:"callback",value:function(){var e=[].concat(Array.prototype.slice.call(arguments)),t=e[0],n=e[1],r=t.classList.contains("range-start");r?this.start=n:this.end=n,r?this.endElem.dataset.dateMin=n:this.startElem.dataset.dateMax=n}}]),e}();e.hasOwnProperty("exports")?e.exports=Object.assign({},e.exports,t):e.RangePicker=t}("undefined"==typeof module?window:module);
+((glob) => {
+  class RangePicker {
+    constructor(elem) {
+        this.elem = elem
+        this.initialized = false
+        this.init()
+    }
+
+    init () {
+      if (!this.elem)
+        return
+
+      if (this.initialized)
+        return
+      this.initialized = true
+
+      let time = +new Date()
+
+      this.startElem = this.elem.querySelector('.range-start')
+      this.endElem = this.elem.querySelector('.range-end')
+      this.startElem.classList.add('start'+time)
+      this.endElem.classList.add('end'+time)
+
+      this.startController = new DZDatePicker('start'+time)
+      this.endController = new DZDatePicker('end'+time)
+
+      this.startController.callback = this.callback.bind(this)
+      this.endController.callback = this.startController.callback
+    }
+
+    callback() {
+      let args = [...arguments]
+      let elem = args[0]
+      let val = args[1]
+
+      let isStart = elem.classList.contains('range-start')
+
+      if (isStart)
+        this.start = val
+      else
+        this.end = val
+
+      if (isStart) {
+        // update the min-date of the end-range
+        this.endElem.dataset.dateMin = val
+      }
+      else {
+        // update the max-date of the start-range
+        this.startElem.dataset.dateMax = val
+      }
+    }
+  }
+
+  if (glob.hasOwnProperty('exports'))
+    glob.exports = Object.assign({}, glob.exports, RangePicker)
+  else
+    glob.RangePicker = RangePicker
+
+})(typeof module === "undefined" ? window : module)
+
+//# sourceMappingURL=rangepicker-dist.js.map

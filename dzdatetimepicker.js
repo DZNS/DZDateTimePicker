@@ -490,7 +490,7 @@
         
         let rect = evt.target.getBoundingClientRect()
         let center = {
-          x: rect.left - (rect.width / 4),
+          x: (rect.left + (rect.right - rect.width))/2,
           y: rect.top + rect.height
         }
 
@@ -525,7 +525,7 @@
         // the width before showing = actual width * 0.25 
         let width = timerRect.width * 4
 
-        timer.style.left = (center.x - width/2) + 'px'
+        timer.style.left = center.x - timerRect.width + 'px'
         timer.style.top = (center.y + 16) + 'px'
 
         timer.classList.add('active')
