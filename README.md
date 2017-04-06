@@ -16,6 +16,11 @@ On a related note:
 - All distribution files are in the `dist` directory (which you should use for production sites)
 
 ### Setup
+Via NPM
+```sh
+npm install --save dzdatetimepicker
+```
+
 ```html
 <script src="dzdatetimepicker-dist.js"></script>
 
