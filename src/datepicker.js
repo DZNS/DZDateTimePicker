@@ -1,43 +1,4 @@
-;((glob) => {
-
-  'use strict';
-
-  const slice = Array.prototype.slice
-
-  const findParent = (elem, id) => {
-      
-    const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
-    
-    if(checker(elem))
-      return elem;
-      
-    while(elem.parentNode) {
-
-      elem = elem.parentNode
-
-      if(elem === document.body || elem === document)
-        return undefined
-
-      if(checker(elem))
-        return elem
-
-    }
-
-    return undefined
-  }
-
-  const inputFocus = (evt) => {
-    if(evt && evt.preventDefault)
-      evt.preventDefault()
-    evt.target.blur()
-    return false
-  }
-
-  const inputBlur = (evt) => {
-    if(evt && evt.preventDefault)
-      evt.preventDefault()
-    return false
-  }
+((glob) => {
 
   class DatePicker {
 
@@ -158,6 +119,8 @@
           this.source.value = val
           if ('InputEvent' in window)
             this.source.dispatchEvent(new InputEvent('input'))
+          else
+            this.source.dispatchEvent(new Event('input'))
         }
         else if(this.source.dataset.dateVal)
           this.source.dataset.dateVal = val
@@ -201,8 +164,11 @@
           x: rect.left + (rect.width / 2),
           y: rect.top + rect.height
         }
+        let target = evt.target.nodeName === "INPUT" ? 
 
-        let target = findParent(evt.target, this.customClass || 'date-trigger')
+                      evt.target : 
+                      findParent(evt.target, this.customClass || 'date-trigger')
+
         this.source = target
 
         let calendar = this.drawCalendar()
@@ -410,56 +376,11 @@
 
   }
 
-  class TimePicker {
-
-    constructor() {
-      this.init()
-    }
-
-    init() {
-
-      if(this.initialized)
-        return false
-
-      this.initialized = true
-      this.setupHooks()
-
-    }
-
-    setupHooks() {
-
-      this.bodyClick = (evt) => {
-
-        if(evt.target.nodeName === 'SELECT')
-          return false
-      
-        let timer = this.getTimer()
-
-        if(timer)
-          if(!timer.classList.contains('active'))
-            document.body.removeChild(timer)
-          else if(!this.isInTimer(evt.target)) {
-            return this.cleanupTimer(evt, timer)
-          }
-        
-        document.body.removeEventListener('click', this.bodyClick, false);
-      
-      }
-      
-      const didChange = () => {
-           
-        // let target = evt.target
-        let timer = this.getTimer()
-        
-        let hours = parseInt(timer.children[0].value)
-        let minutes = parseInt(timer.children[1].value)
-        let shift = parseInt(timer.children[2].value)
-        
-        if(shift === 1)
-          hours += 12
-          
-        if(hours === 12 && shift === 0)
-          hours = '00'
+  if(glob && glob.exports)
+    glob.exports = Object.assign({}, {
+      'DatePicker': DatePicker,
+      'datePicker': new DatePicker()
+    })
 
         if(this.source.nodeName === 'INPUT') {
           this.source.value = hours + ':' + minutes
@@ -652,10 +573,8 @@
     }
   }
   else {
-    glob.DZDatePicker = DatePicker
-    glob.DZTimePicker = TimePicker
+    glob.DatePicker = DatePicker
     glob.datePicker = new DatePicker()
-    glob.timePicker = new TimePicker()
   }
 
-})(typeof module === "undefined" ? window : module)
+})(typeof module === "undefined" ? window : module);

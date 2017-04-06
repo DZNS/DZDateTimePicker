@@ -1,0 +1,44 @@
+<style type="text/css">
+    * {
+      box-sizing: inherit;
+    }
+
+    html {
+      box-sizing: border-box;
+      font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Lucida Grande", sans-serif;
+    }
+
+    body {
+      display: flex;
+    }
+
+    #container {
+      width: 100%;
+      max-width: 400px;
+      margin: 60px auto;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="../dist/dzdatetimepicker.css">
+<div id="container">
+  
+  <!-- Only Date -->
+  <input type="date" name="date" placeholder="date"/>
+  
+  <!-- Only Time -->
+  <input type="time" name="time" placeholder="time"/>
+
+  <!-- Both -->
+  <!-- Always embed a datetime-local input inside a div so the script
+    can automanage things better -->
+  <div>
+    <input type="datetime-local" name="time" placeholder="datetime-local" required/>
+  </div>
+  
+</div>
+
+<script type="text/javascript" src="../dist/dzdatetimepicker-dist.js"></script>
+<script>
+function didSetTime (e) {
+  console.log(e)
+}
+</script>
