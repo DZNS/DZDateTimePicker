@@ -704,8 +704,8 @@ const inputBlur = (evt) => {
       this.startElem.classList.add('start'+time)
       this.endElem.classList.add('end'+time)
 
-      this.startController = new DZDatePicker('start'+time)
-      this.endController = new DZDatePicker('end'+time)
+      this.startController = new DatePicker('start'+time)
+      this.endController = new DatePicker('end'+time)
 
       this.startController.callback = this.callback.bind(this)
       this.endController.callback = this.startController.callback
