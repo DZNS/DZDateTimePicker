@@ -138,7 +138,7 @@
         if(!calendar)
           return
            
-        let dates = slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
+        let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
@@ -210,7 +210,7 @@
       }
 
       let triggers = document.querySelectorAll(this.customClass ? "." + this.customClass : '.date-trigger')
-      triggers = slice.call(triggers)
+      triggers = Array.prototype.slice.call(triggers)
 
       const attachTrigger = (elem) => {
         if(!elem) return

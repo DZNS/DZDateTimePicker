@@ -104,7 +104,7 @@
         }
         
         // add the hooks
-        slice.call(timer.children).forEach((item) => {
+        Array.prototype.slice.call(timer.children).forEach((item) => {
           item.addEventListener('change', didChange, false)
         })
         
@@ -140,7 +140,7 @@
         }
       }
 
-      let triggers = slice.call(document.querySelectorAll('.timer-trigger'))
+      let triggers = Array.prototype.slice.call(document.querySelectorAll('.timer-trigger'))
       
       triggers.forEach((item) => {
         attachTrigger(item)

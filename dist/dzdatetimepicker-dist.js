@@ -1,7 +1,5 @@
 'use strict';
 
-const slice = Array.prototype.slice
-
 const findParent = (elem, id) => {
     
   const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
@@ -181,7 +179,7 @@ const inputBlur = (evt) => {
         if(!calendar)
           return
            
-        let dates = slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
+        let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
@@ -253,7 +251,7 @@ const inputBlur = (evt) => {
       }
 
       let triggers = document.querySelectorAll(this.customClass ? "." + this.customClass : '.date-trigger')
-      triggers = slice.call(triggers)
+      triggers = Array.prototype.slice.call(triggers)
 
       const attachTrigger = (elem) => {
         if(!elem) return
@@ -537,7 +535,7 @@ const inputBlur = (evt) => {
         }
         
         // add the hooks
-        slice.call(timer.children).forEach((item) => {
+        Array.prototype.slice.call(timer.children).forEach((item) => {
           item.addEventListener('change', didChange, false)
         })
         
@@ -573,7 +571,7 @@ const inputBlur = (evt) => {
         }
       }
 
-      let triggers = slice.call(document.querySelectorAll('.timer-trigger'))
+      let triggers = Array.prototype.slice.call(document.querySelectorAll('.timer-trigger'))
       
       triggers.forEach((item) => {
         attachTrigger(item)
@@ -770,12 +768,12 @@ const inputBlur = (evt) => {
   })
 
   const hookTime = () => {
-    let inputs = slice.call(document.querySelectorAll('input[type="time"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="time"]'))
     inputs.forEach(attachTimeTrigger)
   }
 
   const hookDate = () => {
-    let inputs = slice.call(document.querySelectorAll('input[type="date"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="date"]'))
     inputs.forEach(attachDateTrigger)
   }
 
@@ -787,7 +785,7 @@ const inputBlur = (evt) => {
      * We set the original input elem to "hidden" and manipulate
      * it's value so the user still retains the name of that field in the form
      */
-    let inputs = slice.call(document.querySelectorAll('input[type="datetime-local"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="datetime-local"]'))
     inputs.forEach(elem => {
       
       // create a reference for the parent node because we need it later

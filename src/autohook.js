@@ -25,12 +25,12 @@
   })
 
   const hookTime = () => {
-    let inputs = slice.call(document.querySelectorAll('input[type="time"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="time"]'))
     inputs.forEach(attachTimeTrigger)
   }
 
   const hookDate = () => {
-    let inputs = slice.call(document.querySelectorAll('input[type="date"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="date"]'))
     inputs.forEach(attachDateTrigger)
   }
 
@@ -42,7 +42,7 @@
      * We set the original input elem to "hidden" and manipulate
      * it's value so the user still retains the name of that field in the form
      */
-    let inputs = slice.call(document.querySelectorAll('input[type="datetime-local"]'))
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="datetime-local"]'))
     inputs.forEach(elem => {
       
       // create a reference for the parent node because we need it later

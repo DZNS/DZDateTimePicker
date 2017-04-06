@@ -1,7 +1,5 @@
 'use strict';
 
-const slice = Array.prototype.slice
-
 const findParent = (elem, id) => {
     
   const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
