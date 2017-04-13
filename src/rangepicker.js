@@ -18,6 +18,10 @@
 
       this.startElem = this.elem.querySelector('.range-start')
       this.endElem = this.elem.querySelector('.range-end')
+
+      this.startElem.setAttribute("type", "text")
+      this.endElem.setAttribute("type", "text")
+      
       this.startElem.classList.add('start'+time)
       this.endElem.classList.add('end'+time)
 
