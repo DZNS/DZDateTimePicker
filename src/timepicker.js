@@ -96,7 +96,8 @@
         // set the current time
         if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
           let date = new Date()
-          let hours = date.getHours(), minutes = date.getMinutes()
+          let hours = date.getHours(), 
+            minutes = date.getMinutes()
           
           timer.children[0].value = hours > 12 ? hours - 12 : hours
           timer.children[1].value = minutes
@@ -169,10 +170,9 @@
         val = val.split(':')
         hoursVal = parseInt(val[0])
         minVal = val[1]
-        if(hoursVal > 12) {
-          hoursVal -= 12
+
+        if(hoursVal >= 12)
           shiftVal = true
-        }
       }
 
       let markup = `<div id="dz-timer" class="inline-container">

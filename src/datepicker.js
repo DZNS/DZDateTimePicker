@@ -102,7 +102,8 @@
         date = new Date(currentString[0],currentString[1],date)
 
         let fn = window[this.source.dataset.onset]
-        if(fn) fn(date)
+        if(fn) 
+          fn(date)
 
         // zero pad the month if needed
         let month = date.getMonth() + 1

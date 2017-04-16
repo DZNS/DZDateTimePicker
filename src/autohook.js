@@ -24,6 +24,8 @@
     checks[key] = input.type === key 
   })
 
+  const DATE_TIME_EXP = /([\d]{4}\-[\d]{2}\-[\d]{2})T([\d]{2}\:[\d]{2})/
+
   const hookTime = () => {
     let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="time"]'))
     inputs.forEach(attachTimeTrigger)
@@ -49,6 +51,16 @@
       const input = elem
       const container = input.parentNode
       const getTarget = () => container.querySelector("input[data-original='datetime-local']")
+
+      let value = input.value,
+        hasValue = value.trim().length > 0,
+        date = null,
+        time = null
+      
+      if (hasValue && DATE_TIME_EXP.test(value)) {
+        date = value.replace(DATE_TIME_EXP, "$1")
+        time = value.replace(DATE_TIME_EXP, "$2")
+      }
       
       const dateChange = evt => {
         let target = getTarget()
@@ -74,13 +86,26 @@
       let inDate = document.createElement("input")
       inDate.type = checks.date ? "date" : "text"
       inDate.placeholder = "Date"
-      inDate.oninput = dateChange
+      inDate.oninput = dateChange;
+
+      if (date)
+        inDate.value = date
+
+      // check if date-min and date-max are set
+      let {dateMin, dateMax} = input.dataset
+      if (dateMin)
+        inDate.dataset.dateMin = dateMin
+      if (dateMax)
+        inDate.dataset.dateMax = dateMax
 
       // create our new time input
       let inTime = document.createElement("input")
       inTime.type = checks.time ? "time" : "text"
       inTime.placeholder = "Time"
       inTime.oninput = timeChange;
+
+      if (time)
+        inTime.value = time;
       
       [inDate, inTime].forEach(inp => {
         inp.__defineGetter__("required", function() {

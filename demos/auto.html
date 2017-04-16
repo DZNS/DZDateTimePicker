@@ -29,9 +29,16 @@
 
   <!-- Both -->
   <!-- Always embed a datetime-local input inside a div so the script
-    can automanage things better -->
+    can auto-manage things better -->
   <div>
-    <input type="datetime-local" name="time" placeholder="datetime-local" required/>
+    <input 
+      type="datetime-local" 
+      name="time" 
+      placeholder="datetime-local" 
+      value="2017-04-16T17:55"
+      data-date-max="2017-04-30"
+      data-date-min="2017-01-01"
+      required />
   </div>
   
 </div>
