@@ -1,7 +1,7 @@
 ((glob) => {
 
-  const prevSVG = `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_left</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
-           <button id="dz-next"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_right</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg>`;
+  const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>`;
+  const nextSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg>`;
 
   class DatePicker {
 
@@ -197,6 +197,9 @@
 
         calendar.classList.add('active')
         this.source.setAttribute("aria-expanded", "true")
+        if (this.source.hasAttribute("id")) {
+            calendar.setAttribute("aria-describedby", this.source.getAttribute("id"))
+          }
            
         hookDates()
 
@@ -246,6 +249,10 @@
 
     getMonthName(idx) {
       return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].splice(idx, 1)
+    }
+
+    getFullMonthName(idx) {
+      return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].splice(idx, 1)
     }
 
     getDaysArrayByMonth(date) {
@@ -315,10 +322,19 @@
           
         classes = classes.join(' ')
 
+        let ariaString = date.toDateString()
+        ariaString = [ariaString.substr(0,3), ariaString.substr(4)]
+        ariaString[0] += "day, "
+
+        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)]
+        ariaString[1][0] = this.getFullMonthName(date.getMonth())
+        ariaString[1] = ariaString[1].join(" ")
+        ariaString = ariaString.join("")
+
         if (idx !== 0)
-          markup += `<div role="button" class="${classes}">${date.getDate()}</div>`
+          markup += `<div role="link" aria-label="${ariaString}" class="${classes}">${date.getDate()}</div>`
         else
-          markup += `<div style="margin-left:${offsetDay * 35}px;" role="button" class="${classes}">${date.getDate()}</div>`
+          markup += `<div style="margin-left:${offsetDay * 35}px;" role="link" aria-label="${ariaString}" class="${classes}">${date.getDate()}</div>`
 
       })
 
@@ -338,10 +354,11 @@
       let dates = this.getDaysArrayByMonth(now)
       let days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
       
-      let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}">
+      let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}"  role="dialog" aria-label="Calendar">
         <div class="dz-title"> 
-           <h4>${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
-           <button id="dz-prev">${prevSVG}</button>
+           <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(now.getMonth())}, ${now.getFullYear()}">${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
+           <button id="dz-prev" aria-label="Previous Month" title="Previous Month">${prevSVG}</button>
+           <button id="dz-next" aria-label="Next Month" title="Next Month">${nextSVG}</button>
         </div>
         <div class="dz-days">`
 

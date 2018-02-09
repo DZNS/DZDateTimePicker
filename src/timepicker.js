@@ -234,7 +234,7 @@
           shiftVal = true
       }
 
-      let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-lable="Time picker">
+      let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-label="Time picker">
         <select class="hours">`
       
       // draw hours dropdown
