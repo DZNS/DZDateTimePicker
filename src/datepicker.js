@@ -107,7 +107,7 @@
             elem.focus()
           return true
         }
-console.log(evt)
+
         if (keyCode >= 37 && keyCode <= 40) {
           // up or down arrow keys
           const current = Number(document.activeElement.innerHTML)
