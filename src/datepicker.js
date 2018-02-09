@@ -1,5 +1,8 @@
 ((glob) => {
 
+  const prevSVG = `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_left</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
+           <button id="dz-next"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_right</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg>`;
+
   class DatePicker {
 
     constructor(customClass) {
@@ -89,8 +92,7 @@
             document.body.removeChild(calendar)
           else if(!this.isInCalendar(evt.target)) {
             return this.cleanupCalendar(evt, calendar)
-          }
-      
+        }
       }
       
       const dateClick = (evt) => {
@@ -194,6 +196,7 @@
         next.addEventListener('click', nextClick, false)
 
         calendar.classList.add('active')
+        this.source.setAttribute("aria-expanded", "true")
            
         hookDates()
 
@@ -285,8 +288,11 @@
 
       // find offset of first date.
       let offsetDay = dates[0].getDay()
+
+      this.source.setAttribute("aria-haspopup", "true")
+      this.source.setAttribute("aria-expanded", "false")
       
-      const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() && compare.getYear()
+      const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
 
       dates.forEach((date, idx) => {
 
@@ -336,8 +342,7 @@
       let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}">
         <div class="dz-title"> 
            <h4>${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
-           <button id="dz-prev"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_left</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
-           <button id="dz-next"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_right</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
+           <button id="dz-prev">${prevSVG}</button>
         </div>
         <div class="dz-days">`
 
@@ -367,6 +372,12 @@
           this.source = undefined
         }, 300)
         
+      }
+
+      if (this.source) {
+        console.log(this.source)
+        this.source.setAttribute("aria-expanded", "false")
+        console.log(this.source.getAttribute("aria-expanded"))
       }
 
       document.body.removeEventListener('click', this.bodyClick, false)
