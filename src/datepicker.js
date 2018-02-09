@@ -222,6 +222,8 @@
         if(elem.nodeName === "INPUT") {
           elem.addEventListener('focus', inputFocus, false)
           elem.addEventListener('blur', inputBlur, false)
+          elem.setAttribute("aria-haspopup", "true")
+          elem.setAttribute("aria-expanded", "false")
         }
       }
 
@@ -288,9 +290,6 @@
 
       // find offset of first date.
       let offsetDay = dates[0].getDay()
-
-      this.source.setAttribute("aria-haspopup", "true")
-      this.source.setAttribute("aria-expanded", "false")
       
       const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
 

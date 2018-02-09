@@ -1,5 +1,19 @@
 ((glob) => {
 
+  const measure = (fn = function() {}) => new Promise((resolve, reject) => {
+     window.requestAnimationFrame(() => {
+      const retval = fn()
+      resolve(retval)
+    })
+  })
+
+  const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
+    window.requestAnimationFrame(() => {
+      const retval = fn()
+      resolve(retval)
+    })
+  })
+
   class TimePicker {
 
     constructor() {
@@ -34,6 +48,29 @@
         
         document.body.removeEventListener('click', this.bodyClick, false);
       
+      }
+
+      this.bodyInput = (evt) => {
+        const {keyCode} = evt
+        
+        if (keyCode != 13 && keyCode != 27)
+          return true
+
+        if (keyCode == 27) {
+          // user is dismissing by pressing the Esc. key
+          // reset the value back to the original value
+          if (this.hasOwnProperty("originalValue")) {
+            this.source.value = this.originalValue
+          }
+        }
+
+        // user has pressed the enter key. Assume to be a confirmation
+        if (this.hasOwnProperty("originalValue"))
+          delete [this.originalValue]
+
+        this.cleanupTimer(undefined, this.getTimer())
+
+        return true
       }
       
       const didChange = () => {
@@ -87,46 +124,66 @@
         }
 
         this.source = evt.target
+
         let timer = this.drawTimer()
 
-        document.body.insertAdjacentHTML('beforeEnd', timer)
-
-        timer = this.getTimer()
-        
-        // set the current time
-        if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
-          let date = new Date()
-          let hours = date.getHours(), 
-            minutes = date.getMinutes()
-          
-          timer.children[0].value = hours > 12 ? hours - 12 : hours
-          timer.children[1].value = minutes
-          timer.children[2].value = hours >= 12 ? 1 : 0
-        }
-        
-        // add the hooks
-        Array.prototype.slice.call(timer.children).forEach((item) => {
-          item.addEventListener('change', didChange, false)
+        mutate(() => {
+          document.body.insertAdjacentHTML('beforeEnd', timer)
         })
-        
-        // if(evt.target.dataset.onchange)
-        //    timer.dataset.onchange = evt.target.dataset.onchange
-        
-        // position the calendar near the origin point
-        let timerRect = timer.getBoundingClientRect()
-        
-        // the width before showing = actual width * 0.25 
-        let width = timerRect.width * 4
+        .then(() => {
+          timer = this.getTimer()
 
-        timer.style.left = (center.x - 16) + 'px'
-        timer.style.top = (center.y + 16) + 'px'
+          // set the current time
+          if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
+            let date = new Date()
+            let hours = date.getHours(), 
+              minutes = date.getMinutes()
+            
+            return mutate(() => {
+              timer.children[0].value = hours > 12 ? hours - 12 : hours
+              timer.children[1].value = minutes
+              timer.children[2].value = hours >= 12 ? 1 : 0
+            })
+          }
 
-        timer.classList.add('active')
-        
-        setTimeout(() => {
-          // this needs to be added a second later to prevent ghost click
+          return Promise.resolve()
+        })
+        .then(() => {
+          // add the hooks
+          Array.prototype.slice.call(timer.children).forEach((item) => {
+            item.addEventListener('change', didChange, false)
+          })
+
+          return measure(() => timer.getBoundingClientRect())
+        })
+        .then(result => {
+          // position the calendar near the origin point
+          const timerRect = result
+          
+          // the width before showing = actual width * 0.25 
+          const width = timerRect.width * 4
+
+          timer.style.left = (center.x - 16) + 'px'
+          timer.style.top = (center.y + 16) + 'px'
+
+          return mutate(() => {
+            timer.classList.add('active')
+
+            this.source.setAttribute("aria-expanded", "true")
+            if (this.source.hasAttribute("id")) {
+              timer.setAttribute("aria-describedby", this.source.getAttribute("id"))
+            }
+          })
+        })
+        .then(() => {
+          timer.querySelector("select").focus()
+          this.originalValue = this.source.value
           document.body.addEventListener('click', this.bodyClick, false)
-        }, 500)
+          document.body.addEventListener('keydown', this.bodyInput, false)
+        })
+        .catch(err => {
+          console.error(err)
+        })
 
         return false
         
@@ -138,6 +195,8 @@
         if(elem.nodeName === "INPUT") {
           elem.addEventListener('focus', inputFocus, false)
           elem.addEventListener('blur', inputBlur, false)
+          elem.setAttribute("aria-haspopup", "true")
+          elem.setAttribute("aria-expanded", "false")
         }
       }
 
@@ -175,7 +234,7 @@
           shiftVal = true
       }
 
-      let markup = `<div id="dz-timer" class="inline-container">
+      let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-lable="Time picker">
         <select class="hours">`
       
       // draw hours dropdown
@@ -220,17 +279,22 @@
       
       if(timer) {
         
-        timer.classList.remove('active')
-        
-        setTimeout(() => {
+        mutate(() => {
+          timer.classList.remove('active')
+        })
+        .then(() => {
           this.source = undefined
           if(timer.parentNode)
             document.body.removeChild(timer)
-        }, 300)
+        })
+        .catch(err => {
+          console.error(err)
+        })
         
       }
 
       document.body.removeEventListener('click', this.bodyClick, false)
+      document.body.removeEventListener('keydown', this.bodyInput, false)
 
       return false
     }
