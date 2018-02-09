@@ -1,19 +1,5 @@
 ((glob) => {
 
-  const measure = (fn = function() {}) => new Promise((resolve, reject) => {
-     window.requestAnimationFrame(() => {
-      const retval = fn()
-      resolve(retval)
-    })
-  })
-
-  const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
-    window.requestAnimationFrame(() => {
-      const retval = fn()
-      resolve(retval)
-    })
-  })
-
   class TimePicker {
 
     constructor() {

@@ -20,20 +20,34 @@ const findParent = (elem, id) => {
   }
 
   return undefined
-}
+};
 
 const inputFocus = (evt) => {
   if(evt && evt.preventDefault)
     evt.preventDefault()
   evt.target.blur()
   return false
-}
+};
 
 const inputBlur = (evt) => {
   if(evt && evt.preventDefault)
     evt.preventDefault()
   return false
-}
+};
+
+const measure = (fn = function() {}) => new Promise((resolve, reject) => {
+   window.requestAnimationFrame(() => {
+    const retval = fn()
+    resolve(retval)
+  })
+});
+
+const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
+  window.requestAnimationFrame(() => {
+    const retval = fn()
+    resolve(retval)
+  })
+});
 
 // @prepros-append ./datepicker.js
 // @prepros-append ./timepicker.js
