@@ -88,12 +88,22 @@ The `RangePicker` will then automatically handle all the setup for you and adjus
 - If the pickers detect an `<input>` element, the pickers will update the `value` attribute when the user updates their selection. 
 - When not using an `<input>` element, you can optionally set the attribute `data-date-val=""` and it'll be updated similarly. 
 
-### Todo
-- [x] Remove dependencies 
-- [x] Structure the repo properly
-- [x] Add source maps to distribution files
-- [x] Prepros for handling distribution process
-- [x] lint all source js files
+### Keyboard Navigation
+#### Date picker
+- `Tab`, `→` to move to the next date
+- `Shift + Tab`, `←` to move to the previous date
+- `Space` or `Enter` to confirm input
+- `Escape` to dismiss the datepicker
+- `Home` to go to the first date in the month
+- `End` to go to the last date in the month
+- `Page Up` to go to the previous month
+- `Page Down` to go to the next month
+
+#### Time picker
+- `Tab` to move to the next control
+- `Shift + Tab` to move to the previous control
+- `Enter` to confirm input
+- `Space` to confirm control input
 
 ### License
 DZDateTimePicker is licensed under the MIT License. Please refer to the LICENSE file for more information. 

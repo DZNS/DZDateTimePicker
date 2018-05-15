@@ -1,5 +1,8 @@
 ((glob) => {
 
+  const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#007AFF" fill-rule="evenodd"/></svg></button>`;
+  const nextSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#007AFF" fill-rule="evenodd"/></svg>`;
+
   class DatePicker {
 
     constructor(customClass) {
@@ -89,8 +92,58 @@
             document.body.removeChild(calendar)
           else if(!this.isInCalendar(evt.target)) {
             return this.cleanupCalendar(evt, calendar)
-          }
-      
+        }
+      }
+
+      this.bodyInput = (evt) => {
+        const {keyCode} = evt
+        
+        const calendar = this.getCalendar()
+
+        if (keyCode == 36 || keyCode == 35) {
+          // pressed Home or End
+          const elem = calendar.querySelector(`.dz-dates button:${keyCode == 36 ? 'first-child' : 'last-child'}`)
+          if (elem)
+            elem.focus()
+          return true
+        }
+
+        if (keyCode >= 37 && keyCode <= 40) {
+          // up or down arrow keys
+          const current = Number(document.activeElement.innerHTML) || 0
+          
+          let expected = current
+          if (keyCode == 40) expected += 7; // down
+          else if (keyCode == 38) expected -= 7; // up
+          else if (keyCode == 37) expected -= 1; // left
+          else expected += 1; // right
+
+          const elem = calendar.querySelector(`.dz-dates button:nth-child(${expected})`)
+          if (elem)
+            elem.focus()
+          return true
+        }
+
+        if (keyCode == 33) {
+          calendar.querySelector("#dz-prev").click()
+          return true
+        }
+
+        if (keyCode == 34) {
+          calendar.querySelector("#dz-next").click()
+          return true
+        }
+
+        if (keyCode != 13 && keyCode != 27 || keyCode != 32)
+          return true
+
+        if (keyCode == 13 || keyCode == 32) {
+           // user has pressed the enter or space key. Assume to be a confirmation
+           document.activeElement.getAttribute("aria-label").click()
+           // the above click will automatically clean up the calendar
+        }
+
+        return true
       }
       
       const dateClick = (evt) => {
@@ -139,7 +192,7 @@
         if(!calendar)
           return
            
-        let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates div'))
+        let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates button'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
@@ -174,37 +227,63 @@
 
         let calendar = this.drawCalendar()
 
-        document.body.insertAdjacentHTML('beforeEnd', calendar)
+        mutate(() => {
+          document.body.insertAdjacentHTML('beforeEnd', calendar)
+        })
+        .then(() => {
+          calendar = document.getElementById('dz-calendar')
+          return measure(() => calendar.getBoundingClientRect())
+        })
+        .then(result => {
+          // position the calendar near the origin point
+          const calendarRect = result
+          
+          // the width before showing = actual width * 0.25 
+          let width = calendarRect.width * 4
 
-        calendar = document.getElementById('dz-calendar')
-        
-        // position the calendar near the origin point
-        let calendarRect = calendar.getBoundingClientRect()
-        
-        // the width before showing = actual width * 0.25 
-        let width = calendarRect.width * 4
+          calendar.style.left = (center.x - width/2) + 'px'
+          calendar.style.top = (center.y + 16) + 'px'
 
-        calendar.style.left = (center.x - width/2) + 'px'
-        calendar.style.top = (center.y + 16) + 'px'
+          let prev = calendar.children[0].children[1]
+          let next = calendar.children[0].children[2]
 
-        let prev = calendar.children[0].children[1]
-        let next = calendar.children[0].children[2]
+          prev.addEventListener('click', prevClick, false)
+          next.addEventListener('click', nextClick, false)          
 
-        prev.addEventListener('click', prevClick, false)
-        next.addEventListener('click', nextClick, false)
+          return mutate(() => {
+            calendar.classList.add('active')
+            this.source.setAttribute("aria-expanded", "true")
+            if (this.source.hasAttribute("id")) {
+              calendar.setAttribute("aria-describedby", this.source.getAttribute("id"))
+            }
+          })
+        })
+        .then(() => {
+          hookDates()
 
-        calendar.classList.add('active')
-           
-        hookDates()
-
-        let fn = 'didShowDatePicker'
-        if(window[fn])
-          window[fn](calendar)
-           
-        setTimeout(() => {
-          // this needs to be added a second later to prevent ghost click
+          let fn = 'didShowDatePicker'
+          if(window[fn])
+            window[fn](calendar)
+        })
+        .then(() => {
+          const date = (this.source.hasAttribute("value") ? new Date(this.source.value) : new Date()).getDate()
+          return measure(() => calendar.querySelector(`button:nth-child(${date})`))
+        })
+        .then(result => {
+          if (result) {
+            result.focus()
+          }
           document.body.addEventListener('click', this.bodyClick, false)
-        }, 500)
+          document.body.addEventListener('keydown', this.bodyInput, false)
+        })
+        .then(result => {
+          setTimeout(() => {
+            this.repositionCalendarWithinViewport()
+          }, 100)
+        })
+        .catch(err => {
+          console.error(err)
+        })
 
         return false
 
@@ -219,6 +298,8 @@
         if(elem.nodeName === "INPUT") {
           elem.addEventListener('focus', inputFocus, false)
           elem.addEventListener('blur', inputBlur, false)
+          elem.setAttribute("aria-haspopup", "true")
+          elem.setAttribute("aria-expanded", "false")
         }
       }
 
@@ -241,6 +322,10 @@
 
     getMonthName(idx) {
       return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].splice(idx, 1)
+    }
+
+    getFullMonthName(idx) {
+      return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].splice(idx, 1)
     }
 
     getDaysArrayByMonth(date) {
@@ -286,7 +371,7 @@
       // find offset of first date.
       let offsetDay = dates[0].getDay()
       
-      const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() && compare.getYear()
+      const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
 
       dates.forEach((date, idx) => {
 
@@ -310,10 +395,29 @@
           
         classes = classes.join(' ')
 
+        const days = {
+          "Mon": "Monday",
+          "Tue": "Tuesday",
+          "Wed": "Wednesday",
+          "Thu": "Thursday",
+          "Fri": "Friday",
+          "Sat": "Saturday",
+          "Sun": "Sunday"
+        }
+
+        let ariaString = date.toDateString()
+        ariaString = [ariaString.substr(0,3), ariaString.substr(4)]
+        ariaString[0] = `${days[ariaString[0]]}, `
+
+        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)]
+        ariaString[1][0] = this.getFullMonthName(date.getMonth())
+        ariaString[1] = ariaString[1].join(" ")
+        ariaString = ariaString.join("")
+
         if (idx !== 0)
-          markup += `<div role="button" class="${classes}">${date.getDate()}</div>`
+          markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         else
-          markup += `<div style="margin-left:${offsetDay * 35}px;" role="button" class="${classes}">${date.getDate()}</div>`
+          markup += `<button style="margin-left:${offsetDay * 35}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
 
       })
 
@@ -325,19 +429,19 @@
 
     drawCalendar() {
 
-      let now = new Date()
+      let now = this.source.hasAttribute("value") ? new Date(this.source.value) : new Date()
 
       let year = now.getFullYear()
       let month = now.getMonth()
-      
+
       let dates = this.getDaysArrayByMonth(now)
       let days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
       
-      let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}">
+      let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}"  role="dialog" aria-label="Calendar">
         <div class="dz-title"> 
-           <h4>${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
-           <button id="dz-prev"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_left</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
-           <button id="dz-next"><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>keyboard_arrow_right</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>
+           <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(now.getMonth())}, ${now.getFullYear()}">${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
+           <button id="dz-prev" aria-label="Previous Month" title="Previous Month">${prevSVG}</button>
+           <button id="dz-next" aria-label="Next Month" title="Next Month">${nextSVG}</button>
         </div>
         <div class="dz-days">`
 
@@ -352,6 +456,23 @@
       return markup
     }
 
+    repositionCalendarWithinViewport () {
+
+      const calendar = this.getCalendar()
+
+      if (!calendar)
+        return;
+
+      const rect = calendar.getBoundingClientRect().toJSON();
+      
+      if (rect.x < 0) {
+        // move it to the right
+        const left = rect.x - Number(calendar.style.left.replace("px", ""));
+        calendar.style.left = left + "px"
+      }
+
+    }
+
     cleanupCalendar(evt, calendar) {
 
       if(evt && evt.preventDefault)
@@ -359,17 +480,29 @@
       
       if(calendar) {
         
-        calendar.classList.remove('active')
-        
-        setTimeout(() => {
+        mutate(() => {
+          calendar.classList.remove('active')
+        })
+        .then(() => {
           if (calendar && calendar.parentNode)
             calendar.parentNode.removeChild(calendar)
-          this.source = undefined
-        }, 300)
+        })
+        .then(() => {
+          if (this.source) {
+            return mutate(() => this.source.setAttribute("aria-expanded", "false"))
+          }
+
+          return Promise.resolve()
+        })
+        .then(() => {
+          document.body.removeEventListener('click', this.bodyClick, false)
+          document.body.removeEventListener('keydown', this.bodyInput, false)
+        })
+        .catch(err => {
+          console.error(err)
+        })
         
       }
-
-      document.body.removeEventListener('click', this.bodyClick, false)
 
       return false
 
