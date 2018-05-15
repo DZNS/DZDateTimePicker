@@ -1,7 +1,7 @@
 ((glob) => {
 
-  const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#8FCB14" fill-rule="evenodd"/></svg></button>`;
-  const nextSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#8FCB14" fill-rule="evenodd"/></svg>`;
+  const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#007AFF" fill-rule="evenodd"/></svg></button>`;
+  const nextSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#007AFF" fill-rule="evenodd"/></svg>`;
 
   class DatePicker {
 
@@ -110,7 +110,7 @@
 
         if (keyCode >= 37 && keyCode <= 40) {
           // up or down arrow keys
-          const current = Number(document.activeElement.innerHTML)
+          const current = Number(document.activeElement.innerHTML) || 0
           
           let expected = current
           if (keyCode == 40) expected += 7; // down
@@ -248,7 +248,7 @@
           let next = calendar.children[0].children[2]
 
           prev.addEventListener('click', prevClick, false)
-          next.addEventListener('click', nextClick, false)
+          next.addEventListener('click', nextClick, false)          
 
           return mutate(() => {
             calendar.classList.add('active')
@@ -275,6 +275,11 @@
           }
           document.body.addEventListener('click', this.bodyClick, false)
           document.body.addEventListener('keydown', this.bodyInput, false)
+        })
+        .then(result => {
+          setTimeout(() => {
+            this.repositionCalendarWithinViewport()
+          }, 100)
         })
         .catch(err => {
           console.error(err)
@@ -449,6 +454,23 @@
       </div>`
 
       return markup
+    }
+
+    repositionCalendarWithinViewport () {
+
+      const calendar = this.getCalendar()
+
+      if (!calendar)
+        return;
+
+      const rect = calendar.getBoundingClientRect().toJSON();
+      
+      if (rect.x < 0) {
+        // move it to the right
+        const left = rect.x - Number(calendar.style.left.replace("px", ""));
+        calendar.style.left = left + "px"
+      }
+
     }
 
     cleanupCalendar(evt, calendar) {
