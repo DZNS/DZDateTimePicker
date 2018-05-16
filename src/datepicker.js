@@ -463,12 +463,25 @@
       if (!calendar)
         return;
 
-      const rect = calendar.getBoundingClientRect().toJSON();
+      const rect = calendar.getBoundingClientRect();
       
       if (rect.x < 0) {
         // move it to the right
         const left = rect.x - Number(calendar.style.left.replace("px", ""));
         calendar.style.left = left + "px"
+        calendar.classList.add("zp-l")
+      }
+
+      if ((rect.x + rect.width) > glob.innerWidth) {
+        // pull it back
+        const right = glob.innerWidth - rect.width - 48;
+        calendar.style.left = right + "px";
+
+        calendar.classList.add("zp-r")
+
+        // reposition the pointer
+        const beforeElem = calendar.parentNode.querySelector("#dz-calendar", ":before");
+        console.log(beforeElem.style.left);
       }
 
     }
