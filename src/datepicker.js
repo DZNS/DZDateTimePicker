@@ -209,7 +209,7 @@
           this.cleanupCalendar(evt, phantom)
           setTimeout(() => {
             triggerClick(evt)
-          }, 300)
+          }, 350)
           return false
         }
 
@@ -464,8 +464,6 @@
         return;
       const rect = calendar.getBoundingClientRect();
 
-      const rect = calendar.getBoundingClientRect().toJSON();
-
       if (rect.x < 0) {
         // move it to the right
         const left = rect.x - Number(calendar.style.left.replace("px", "")) - 8;
@@ -497,7 +495,7 @@
         mutate(() => {
           calendar.classList.remove('active')
         })
-        .then(() => wait(500))
+        .then(() => wait(300))
         .then(() => {
           if (calendar && calendar.parentNode)
             calendar.parentNode.removeChild(calendar)
