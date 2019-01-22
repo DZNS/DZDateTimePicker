@@ -526,6 +526,7 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
       if (!calendar)
         return;
+      const rect = calendar.getBoundingClientRect();
 
       const rect = calendar.getBoundingClientRect().toJSON();
 
@@ -533,6 +534,19 @@ window.wait = window.wait || async function (milliseconds = 0) {
         // move it to the right
         const left = rect.x - Number(calendar.style.left.replace("px", "")) - 8;
         calendar.style.left = left + "px"
+        calendar.classList.add("zp-l")
+      }
+
+      if ((rect.x + rect.width) > glob.innerWidth) {
+        // pull it back
+        const right = glob.innerWidth - rect.width - 48;
+        calendar.style.left = right + "px";
+
+        calendar.classList.add("zp-r")
+
+        // reposition the pointer
+        const beforeElem = calendar.parentNode.querySelector("#dz-calendar", ":before");
+        console.log(beforeElem.style.left);
       }
 
     }
@@ -1102,6 +1116,11 @@ window.wait = window.wait || async function (milliseconds = 0) {
     hookTime()
   if (!checks['datetime-local'])
     hookDateTime()
+
+  // expose functions to the window
+  glob.hookDate = hookDate;
+  glob.hookTime = hookTime;
+  glob.hookDateTimer = hookDateTime;
 
 })(typeof module === "undefined" ? window : undefined);
 

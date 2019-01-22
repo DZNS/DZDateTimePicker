@@ -146,4 +146,9 @@
   if (!checks['datetime-local'])
     hookDateTime()
 
+  // expose functions to the window
+  glob.hookDate = hookDate;
+  glob.hookTime = hookTime;
+  glob.hookDateTimer = hookDateTime;
+
 })(typeof module === "undefined" ? window : undefined);
