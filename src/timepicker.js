@@ -22,7 +22,7 @@
 
         if(evt.target.nodeName === 'SELECT')
           return false
-      
+
         let timer = this.getTimer()
 
         if(timer)
@@ -31,14 +31,14 @@
           else if(!this.isInTimer(evt.target)) {
             return this.cleanupTimer(evt, timer)
           }
-        
+
         document.body.removeEventListener('click', this.bodyClick, false);
-      
+
       }
 
       this.bodyInput = (evt) => {
         const {keyCode} = evt
-        
+
         if (keyCode != 13 && keyCode != 27)
           return true
 
@@ -58,19 +58,19 @@
 
         return true
       }
-      
+
       const didChange = () => {
-           
+
         // let target = evt.target
         let timer = this.getTimer()
-        
+
         let hours = parseInt(timer.children[0].value)
         let minutes = parseInt(timer.children[1].value)
         let shift = parseInt(timer.children[2].value)
-      
+
         if(shift === 1 && hours != 12)
           hours += 12
-          
+
         if(hours === 12 && shift === 0)
           hours = '00'
 
@@ -81,20 +81,20 @@
           else
             this.source.dispatchEvent(new Event('input'))
         }
-          
+
         let fn = window[this.source.dataset.onchange]
         if(fn) fn({
           string: hours + ':' + minutes,
           hours: parseInt(hours),
           minutes: minutes
         })
-        
+
       }
-      
+
       const triggerClick = (evt) => {
-        
+
         let phantom = this.getTimer()
-        
+
         if(phantom) {
           this.cleanupTimer(evt, phantom)
           setTimeout(() => {
@@ -102,7 +102,7 @@
           }, 300)
           return false
         }
-        
+
         let rect = evt.target.getBoundingClientRect()
         let center = {
           x: rect.left,
@@ -122,9 +122,9 @@
           // set the current time
           if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
             let date = new Date()
-            let hours = date.getHours(), 
+            let hours = date.getHours(),
               minutes = date.getMinutes()
-            
+
             return mutate(() => {
               timer.children[0].value = hours > 12 ? hours - 12 : hours
               timer.children[1].value = minutes
@@ -145,12 +145,12 @@
         .then(result => {
           // position the calendar near the origin point
           const timerRect = result
-          
-          // the width before showing = actual width * 0.25 
+
+          // the width before showing = actual width * 0.25
           const width = timerRect.width * 4
 
           timer.style.left = (center.x - 16) + 'px'
-          timer.style.top = (center.y + 16) + 'px'
+          timer.style.top = (center.y) + 'px'
 
           return mutate(() => {
             timer.classList.add('active')
@@ -172,7 +172,7 @@
         })
 
         return false
-        
+
       }
 
       const attachTrigger = (elem) => {
@@ -187,7 +187,7 @@
       }
 
       let triggers = Array.prototype.slice.call(document.querySelectorAll('.timer-trigger'))
-      
+
       triggers.forEach((item) => {
         attachTrigger(item)
       })
@@ -222,20 +222,20 @@
 
       let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-label="Time picker">
         <select class="hours">`
-      
+
       // draw hours dropdown
       let hours = Array.from(Array(13).keys())
       hours.shift()
       markup += hours
         .map((item) => {
           if(item === hoursVal)
-            return `<option value='${item}' selected='selected'>${item}</option>` 
-          return `<option value='${item}'>${item}</option>`    
+            return `<option value='${item}' selected='selected'>${item}</option>`
+          return `<option value='${item}'>${item}</option>`
         }).join(' ')
-      
+
       markup += `</select>
         <select class="minutes">`
-      
+
       // draw minutes dropdown
       markup += Array.from(Array(60).keys())
       .map((item) => {
@@ -245,29 +245,30 @@
           return `<option value='${item}' selected='selected'>${item}</option>`
         return `<option value='${item}'>${item}</option>`
       }).join(' ')
-      
+
       // AM, PM
       markup += `</select>
         <select class="shift">
           <option value='0' ${!shiftVal?"selected='selected'" : ''}>AM</option>
           <option value='1' ${shiftVal?"selected='selected'" : ''}>PM</option>
         </select>`
-         
+
       markup +=`</select>
       </div>`
-      
+
       return markup
     }
 
     cleanupTimer(evt, timer) {
       if(evt && evt.preventDefault)
         evt.preventDefault()
-      
+
       if(timer) {
-        
+
         mutate(() => {
           timer.classList.remove('active')
         })
+        .then(() => wait(500))
         .then(() => {
           this.source = undefined
           if(timer.parentNode)
@@ -276,7 +277,7 @@
         .catch(err => {
           console.error(err)
         })
-        
+
       }
 
       document.body.removeEventListener('click', this.bodyClick, false)
@@ -286,7 +287,7 @@
     }
 
   }
-    
+
   if(glob && glob.exports) {
     glob.exports = Object.assign({}, {
       'TimePicker': TimePicker,

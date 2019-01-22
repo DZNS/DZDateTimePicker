@@ -25,7 +25,7 @@
 
         if(evt && evt.preventDefault)
           evt.preventDefault()
-        
+
         let calendar = this.getCalendar()
         let currentString = calendar.dataset.current.split('-')
         let current = new Date(currentString[0], currentString[1])
@@ -34,55 +34,55 @@
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(previous))
         let currentDates = document.querySelector('#dz-calendar .dz-dates')
-        
+
         calendar.insertAdjacentHTML('beforeEnd', newDates)
         newDates = calendar.children[calendar.children.length-1]
-        
+
         calendar.removeChild(currentDates)
-        
+
         let year = previous.getFullYear()
         let month = previous.getMonth()
-        
+
         calendar.dataset.current = `${year} - ${month}`
         calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
-        
+
         hookDates()
 
         return false
 
       }
-      
+
       const nextClick = (evt) => {
 
         if(evt && evt.preventDefault)
           evt.preventDefault()
-        
+
         let calendar = this.getCalendar()
         let currentString = calendar.dataset.current.split('-')
         let current = new Date(currentString[0], currentString[1])
-        
+
         let next = new Date(current.getFullYear(), current.getMonth() + 1)
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(next))
         let currentDates = document.querySelector('#dz-calendar .dz-dates')
-        
+
         calendar.insertAdjacentHTML('beforeEnd', newDates)
         newDates = calendar.children[calendar.children.length-1]
-        
+
         calendar.removeChild(currentDates)
-        
+
         let year = next.getFullYear()
         let month = next.getMonth()
-        
+
         calendar.dataset.current = `${year} - ${month}`
         calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
-        
+
         hookDates()
 
         return false
 
       }
-      
+
       this.bodyClick = (evt) => {
 
         let calendar = this.getCalendar()
@@ -97,7 +97,7 @@
 
       this.bodyInput = (evt) => {
         const {keyCode} = evt
-        
+
         const calendar = this.getCalendar()
 
         if (keyCode == 36 || keyCode == 35) {
@@ -111,7 +111,7 @@
         if (keyCode >= 37 && keyCode <= 40) {
           // up or down arrow keys
           const current = Number(document.activeElement.innerHTML) || 0
-          
+
           let expected = current
           if (keyCode == 40) expected += 7; // down
           else if (keyCode == 38) expected -= 7; // up
@@ -145,9 +145,9 @@
 
         return true
       }
-      
+
       const dateClick = (evt) => {
-        
+
         let calendar = this.getCalendar()
         let date = parseInt(evt.target.innerHTML)
 
@@ -155,7 +155,7 @@
         date = new Date(currentString[0],currentString[1],date)
 
         let fn = window[this.source.dataset.onset]
-        if(fn) 
+        if(fn)
           fn(date)
 
         // zero pad the month if needed
@@ -178,33 +178,33 @@
         }
         else if(this.source.dataset.dateVal)
           this.source.dataset.dateVal = val
-        
+
         if (this.callback)
           this.callback(this.source, val)
 
         return this.cleanupCalendar(evt, calendar)
-        
+
       }
-      
+
       const hookDates = () => {
-        
+
         let calendar = this.getCalendar()
         if(!calendar)
           return
-           
+
         let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates button'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
         })
-        
+
       }
 
       const triggerClick = (evt) => {
-        
+
         // check if calendar is already being shown
         let phantom = this.getCalendar()
-        
+
         if(phantom) {
           this.cleanupCalendar(evt, phantom)
           setTimeout(() => {
@@ -219,8 +219,8 @@
           y: rect.top + rect.height
         }
 
-        let target = evt.target.nodeName === "INPUT" ? 
-                      evt.target : 
+        let target = evt.target.nodeName === "INPUT" ?
+                      evt.target :
                       findParent(evt.target, this.customClass || 'date-trigger')
 
         this.source = target
@@ -237,18 +237,18 @@
         .then(result => {
           // position the calendar near the origin point
           const calendarRect = result
-          
-          // the width before showing = actual width * 0.25 
+
+          // the width before showing = actual width * 0.25
           let width = calendarRect.width * 4
 
           calendar.style.left = (center.x - width/2) + 'px'
-          calendar.style.top = (center.y + 16) + 'px'
+          calendar.style.top = (center.y - rect.height) + 'px'
 
           let prev = calendar.children[0].children[1]
           let next = calendar.children[0].children[2]
 
           prev.addEventListener('click', prevClick, false)
-          next.addEventListener('click', nextClick, false)          
+          next.addEventListener('click', nextClick, false)
 
           return mutate(() => {
             calendar.classList.add('active')
@@ -329,7 +329,7 @@
     }
 
     getDaysArrayByMonth(date) {
-      
+
       let year = date.getFullYear()
       let month = date.getMonth()
       let monthRange = new Date(year, month + 1, 0).getDate()
@@ -351,12 +351,12 @@
         now = new Date(this.source.value)
       else if (this.source.dataset.dateVal)
         now = new Date(this.source.dataset.dateVal)
-      
+
       let markup = `<div class="dz-dates">`
       let calendar = this.getCalendar()
-      
+
       let {dateMax, dateMin} = this.source.dataset
-      
+
       if(dateMax)
         dateMax = new Date(dateMax)
       if(dateMin)
@@ -370,13 +370,13 @@
 
       // find offset of first date.
       let offsetDay = dates[0].getDay()
-      
+
       const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
 
       dates.forEach((date, idx) => {
 
         let classes = [];
-        
+
         // check if the date is today
         if (dateEqual(now, date))
           classes.push('today')
@@ -384,15 +384,15 @@
         // check if this is the selected value
         if(val && dateEqual(date, val))
           classes.push('selected')
-          
+
         // check if the date is within the min range, if one is set
         if(dateMin && (dateMin.getTime() - date.getTime()) > 0)
           classes.push('disabled')
-          
+
         // check if the date is within the max range, if one is set
         if(dateMax && (dateMax.getTime() - date.getTime()) < 0)
           classes.push('disabled')
-          
+
         classes = classes.join(' ')
 
         const days = {
@@ -417,7 +417,7 @@
         if (idx !== 0)
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         else
-          markup += `<button style="margin-left:${offsetDay * 35}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+          markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
 
       })
 
@@ -436,9 +436,9 @@
 
       let dates = this.getDaysArrayByMonth(now)
       let days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-      
+
       let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}"  role="dialog" aria-label="Calendar">
-        <div class="dz-title"> 
+        <div class="dz-title">
            <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(now.getMonth())}, ${now.getFullYear()}">${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
            <button id="dz-prev" aria-label="Previous Month" title="Previous Month">${prevSVG}</button>
            <button id="dz-next" aria-label="Next Month" title="Next Month">${nextSVG}</button>
@@ -464,10 +464,10 @@
         return;
 
       const rect = calendar.getBoundingClientRect().toJSON();
-      
+
       if (rect.x < 0) {
         // move it to the right
-        const left = rect.x - Number(calendar.style.left.replace("px", ""));
+        const left = rect.x - Number(calendar.style.left.replace("px", "")) - 8;
         calendar.style.left = left + "px"
       }
 
@@ -477,12 +477,13 @@
 
       if(evt && evt.preventDefault)
         evt.preventDefault()
-      
+
       if(calendar) {
-        
+
         mutate(() => {
           calendar.classList.remove('active')
         })
+        .then(() => wait(500))
         .then(() => {
           if (calendar && calendar.parentNode)
             calendar.parentNode.removeChild(calendar)
@@ -501,7 +502,7 @@
         .catch(err => {
           console.error(err)
         })
-        
+
       }
 
       return false

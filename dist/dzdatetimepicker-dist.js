@@ -1,12 +1,12 @@
 'use strict';
 
 const findParent = (elem, id) => {
-    
+
   const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
-  
+
   if(checker(elem))
     return elem;
-    
+
   while(elem.parentNode) {
 
     elem = elem.parentNode
@@ -49,10 +49,19 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
   })
 });
 
+window.wait = window.wait || async function (milliseconds = 0) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    })
+};
+
 // @prepros-append ./datepicker.js
 // @prepros-append ./timepicker.js
 // @prepros-append ./rangepicker.js
 // @prepros-append ./autohook.js
+
 ((glob) => {
 
   const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#007AFF" fill-rule="evenodd"/></svg></button>`;
@@ -80,7 +89,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
         if(evt && evt.preventDefault)
           evt.preventDefault()
-        
+
         let calendar = this.getCalendar()
         let currentString = calendar.dataset.current.split('-')
         let current = new Date(currentString[0], currentString[1])
@@ -89,55 +98,55 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(previous))
         let currentDates = document.querySelector('#dz-calendar .dz-dates')
-        
+
         calendar.insertAdjacentHTML('beforeEnd', newDates)
         newDates = calendar.children[calendar.children.length-1]
-        
+
         calendar.removeChild(currentDates)
-        
+
         let year = previous.getFullYear()
         let month = previous.getMonth()
-        
+
         calendar.dataset.current = `${year} - ${month}`
         calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
-        
+
         hookDates()
 
         return false
 
       }
-      
+
       const nextClick = (evt) => {
 
         if(evt && evt.preventDefault)
           evt.preventDefault()
-        
+
         let calendar = this.getCalendar()
         let currentString = calendar.dataset.current.split('-')
         let current = new Date(currentString[0], currentString[1])
-        
+
         let next = new Date(current.getFullYear(), current.getMonth() + 1)
 
         let newDates = this.drawDates(this.getDaysArrayByMonth(next))
         let currentDates = document.querySelector('#dz-calendar .dz-dates')
-        
+
         calendar.insertAdjacentHTML('beforeEnd', newDates)
         newDates = calendar.children[calendar.children.length-1]
-        
+
         calendar.removeChild(currentDates)
-        
+
         let year = next.getFullYear()
         let month = next.getMonth()
-        
+
         calendar.dataset.current = `${year} - ${month}`
         calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
-        
+
         hookDates()
 
         return false
 
       }
-      
+
       this.bodyClick = (evt) => {
 
         let calendar = this.getCalendar()
@@ -152,7 +161,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
       this.bodyInput = (evt) => {
         const {keyCode} = evt
-        
+
         const calendar = this.getCalendar()
 
         if (keyCode == 36 || keyCode == 35) {
@@ -166,7 +175,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         if (keyCode >= 37 && keyCode <= 40) {
           // up or down arrow keys
           const current = Number(document.activeElement.innerHTML) || 0
-          
+
           let expected = current
           if (keyCode == 40) expected += 7; // down
           else if (keyCode == 38) expected -= 7; // up
@@ -200,9 +209,9 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
         return true
       }
-      
+
       const dateClick = (evt) => {
-        
+
         let calendar = this.getCalendar()
         let date = parseInt(evt.target.innerHTML)
 
@@ -210,7 +219,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         date = new Date(currentString[0],currentString[1],date)
 
         let fn = window[this.source.dataset.onset]
-        if(fn) 
+        if(fn)
           fn(date)
 
         // zero pad the month if needed
@@ -233,33 +242,33 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         }
         else if(this.source.dataset.dateVal)
           this.source.dataset.dateVal = val
-        
+
         if (this.callback)
           this.callback(this.source, val)
 
         return this.cleanupCalendar(evt, calendar)
-        
+
       }
-      
+
       const hookDates = () => {
-        
+
         let calendar = this.getCalendar()
         if(!calendar)
           return
-           
+
         let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates button'))
         dates.forEach((item) => {
           if(!item.classList.contains('disabled'))
             item.addEventListener('click', dateClick, false)
         })
-        
+
       }
 
       const triggerClick = (evt) => {
-        
+
         // check if calendar is already being shown
         let phantom = this.getCalendar()
-        
+
         if(phantom) {
           this.cleanupCalendar(evt, phantom)
           setTimeout(() => {
@@ -274,8 +283,8 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           y: rect.top + rect.height
         }
 
-        let target = evt.target.nodeName === "INPUT" ? 
-                      evt.target : 
+        let target = evt.target.nodeName === "INPUT" ?
+                      evt.target :
                       findParent(evt.target, this.customClass || 'date-trigger')
 
         this.source = target
@@ -292,18 +301,18 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         .then(result => {
           // position the calendar near the origin point
           const calendarRect = result
-          
-          // the width before showing = actual width * 0.25 
+
+          // the width before showing = actual width * 0.25
           let width = calendarRect.width * 4
 
           calendar.style.left = (center.x - width/2) + 'px'
-          calendar.style.top = (center.y + 16) + 'px'
+          calendar.style.top = (center.y - rect.height) + 'px'
 
           let prev = calendar.children[0].children[1]
           let next = calendar.children[0].children[2]
 
           prev.addEventListener('click', prevClick, false)
-          next.addEventListener('click', nextClick, false)          
+          next.addEventListener('click', nextClick, false)
 
           return mutate(() => {
             calendar.classList.add('active')
@@ -384,7 +393,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
     }
 
     getDaysArrayByMonth(date) {
-      
+
       let year = date.getFullYear()
       let month = date.getMonth()
       let monthRange = new Date(year, month + 1, 0).getDate()
@@ -406,12 +415,12 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         now = new Date(this.source.value)
       else if (this.source.dataset.dateVal)
         now = new Date(this.source.dataset.dateVal)
-      
+
       let markup = `<div class="dz-dates">`
       let calendar = this.getCalendar()
-      
+
       let {dateMax, dateMin} = this.source.dataset
-      
+
       if(dateMax)
         dateMax = new Date(dateMax)
       if(dateMin)
@@ -425,13 +434,13 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
       // find offset of first date.
       let offsetDay = dates[0].getDay()
-      
+
       const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
 
       dates.forEach((date, idx) => {
 
         let classes = [];
-        
+
         // check if the date is today
         if (dateEqual(now, date))
           classes.push('today')
@@ -439,15 +448,15 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         // check if this is the selected value
         if(val && dateEqual(date, val))
           classes.push('selected')
-          
+
         // check if the date is within the min range, if one is set
         if(dateMin && (dateMin.getTime() - date.getTime()) > 0)
           classes.push('disabled')
-          
+
         // check if the date is within the max range, if one is set
         if(dateMax && (dateMax.getTime() - date.getTime()) < 0)
           classes.push('disabled')
-          
+
         classes = classes.join(' ')
 
         const days = {
@@ -472,7 +481,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         if (idx !== 0)
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         else
-          markup += `<button style="margin-left:${offsetDay * 35}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+          markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
 
       })
 
@@ -491,9 +500,9 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
       let dates = this.getDaysArrayByMonth(now)
       let days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-      
+
       let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}"  role="dialog" aria-label="Calendar">
-        <div class="dz-title"> 
+        <div class="dz-title">
            <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(now.getMonth())}, ${now.getFullYear()}">${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
            <button id="dz-prev" aria-label="Previous Month" title="Previous Month">${prevSVG}</button>
            <button id="dz-next" aria-label="Next Month" title="Next Month">${nextSVG}</button>
@@ -519,10 +528,10 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         return;
 
       const rect = calendar.getBoundingClientRect().toJSON();
-      
+
       if (rect.x < 0) {
         // move it to the right
-        const left = rect.x - Number(calendar.style.left.replace("px", ""));
+        const left = rect.x - Number(calendar.style.left.replace("px", "")) - 8;
         calendar.style.left = left + "px"
       }
 
@@ -532,12 +541,13 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
       if(evt && evt.preventDefault)
         evt.preventDefault()
-      
+
       if(calendar) {
-        
+
         mutate(() => {
           calendar.classList.remove('active')
         })
+        .then(() => wait(500))
         .then(() => {
           if (calendar && calendar.parentNode)
             calendar.parentNode.removeChild(calendar)
@@ -556,7 +566,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         .catch(err => {
           console.error(err)
         })
-        
+
       }
 
       return false
@@ -577,6 +587,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
   }
 
 })(typeof module === "undefined" ? window : module);
+
 ((glob) => {
 
   class TimePicker {
@@ -601,7 +612,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
         if(evt.target.nodeName === 'SELECT')
           return false
-      
+
         let timer = this.getTimer()
 
         if(timer)
@@ -610,14 +621,14 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           else if(!this.isInTimer(evt.target)) {
             return this.cleanupTimer(evt, timer)
           }
-        
+
         document.body.removeEventListener('click', this.bodyClick, false);
-      
+
       }
 
       this.bodyInput = (evt) => {
         const {keyCode} = evt
-        
+
         if (keyCode != 13 && keyCode != 27)
           return true
 
@@ -637,19 +648,19 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
         return true
       }
-      
+
       const didChange = () => {
-           
+
         // let target = evt.target
         let timer = this.getTimer()
-        
+
         let hours = parseInt(timer.children[0].value)
         let minutes = parseInt(timer.children[1].value)
         let shift = parseInt(timer.children[2].value)
-      
+
         if(shift === 1 && hours != 12)
           hours += 12
-          
+
         if(hours === 12 && shift === 0)
           hours = '00'
 
@@ -660,20 +671,20 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           else
             this.source.dispatchEvent(new Event('input'))
         }
-          
+
         let fn = window[this.source.dataset.onchange]
         if(fn) fn({
           string: hours + ':' + minutes,
           hours: parseInt(hours),
           minutes: minutes
         })
-        
+
       }
-      
+
       const triggerClick = (evt) => {
-        
+
         let phantom = this.getTimer()
-        
+
         if(phantom) {
           this.cleanupTimer(evt, phantom)
           setTimeout(() => {
@@ -681,7 +692,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           }, 300)
           return false
         }
-        
+
         let rect = evt.target.getBoundingClientRect()
         let center = {
           x: rect.left,
@@ -701,9 +712,9 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           // set the current time
           if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
             let date = new Date()
-            let hours = date.getHours(), 
+            let hours = date.getHours(),
               minutes = date.getMinutes()
-            
+
             return mutate(() => {
               timer.children[0].value = hours > 12 ? hours - 12 : hours
               timer.children[1].value = minutes
@@ -724,12 +735,12 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         .then(result => {
           // position the calendar near the origin point
           const timerRect = result
-          
-          // the width before showing = actual width * 0.25 
+
+          // the width before showing = actual width * 0.25
           const width = timerRect.width * 4
 
           timer.style.left = (center.x - 16) + 'px'
-          timer.style.top = (center.y + 16) + 'px'
+          timer.style.top = (center.y) + 'px'
 
           return mutate(() => {
             timer.classList.add('active')
@@ -751,7 +762,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         })
 
         return false
-        
+
       }
 
       const attachTrigger = (elem) => {
@@ -766,7 +777,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
       }
 
       let triggers = Array.prototype.slice.call(document.querySelectorAll('.timer-trigger'))
-      
+
       triggers.forEach((item) => {
         attachTrigger(item)
       })
@@ -801,20 +812,20 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
 
       let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-label="Time picker">
         <select class="hours">`
-      
+
       // draw hours dropdown
       let hours = Array.from(Array(13).keys())
       hours.shift()
       markup += hours
         .map((item) => {
           if(item === hoursVal)
-            return `<option value='${item}' selected='selected'>${item}</option>` 
-          return `<option value='${item}'>${item}</option>`    
+            return `<option value='${item}' selected='selected'>${item}</option>`
+          return `<option value='${item}'>${item}</option>`
         }).join(' ')
-      
+
       markup += `</select>
         <select class="minutes">`
-      
+
       // draw minutes dropdown
       markup += Array.from(Array(60).keys())
       .map((item) => {
@@ -824,29 +835,30 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
           return `<option value='${item}' selected='selected'>${item}</option>`
         return `<option value='${item}'>${item}</option>`
       }).join(' ')
-      
+
       // AM, PM
       markup += `</select>
         <select class="shift">
           <option value='0' ${!shiftVal?"selected='selected'" : ''}>AM</option>
           <option value='1' ${shiftVal?"selected='selected'" : ''}>PM</option>
         </select>`
-         
+
       markup +=`</select>
       </div>`
-      
+
       return markup
     }
 
     cleanupTimer(evt, timer) {
       if(evt && evt.preventDefault)
         evt.preventDefault()
-      
+
       if(timer) {
-        
+
         mutate(() => {
           timer.classList.remove('active')
         })
+        .then(() => wait(500))
         .then(() => {
           this.source = undefined
           if(timer.parentNode)
@@ -855,7 +867,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
         .catch(err => {
           console.error(err)
         })
-        
+
       }
 
       document.body.removeEventListener('click', this.bodyClick, false)
@@ -865,7 +877,7 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
     }
 
   }
-    
+
   if(glob && glob.exports) {
     glob.exports = Object.assign({}, {
       'TimePicker': TimePicker,

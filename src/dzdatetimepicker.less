@@ -1,6 +1,18 @@
 /* DZDateTimePicker */
 
-@border: rgba(0,0,0,.12);
+:root {
+    --color-border: rgba(0,0,0,.12);
+    --color-base: rgba(255, 255, 255, 1);
+    --color-base2: rgba(255, 255, 255, 0.9);
+    --color-base3: rgba(255, 255, 255, 0.8);
+    --color-text: rgba(0,0,0,0.87);
+    --color-title: rgba(0,0,0,1);
+    --color-subtext: rgba(0,0,0,.54);
+
+    --color-dzcal-today: #FF5252;
+    --color-dzcal-selected: #018AFF;
+}
+
 .hideText() {
   text-indent: 1000%;
   white-space: nowrap;
@@ -14,20 +26,17 @@
 }
 
 #dz-calendar, #dz-timer {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 12px;
 
-  width: 245px;
+  width: 252px;
   height: auto;
   display: block;
 
-  padding-bottom: 8px;
-
   position: absolute;
 
-  background: #FFFFFF;
-  box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.16), 0px -1px 1px 0px rgba(0,0,0,0.07), 0px 2px 4px 0px rgba(0,0,0,0.20);
-  border-radius: 2px;
+  background: var(--color-base);
+  box-shadow: var(--modal-shadow, ~"0px 6px 18px 0px rgba(0,0,0,0.16), 0px -1px 1px 0px rgba(0,0,0,0.07), 0 0 0 1px var(--color-border)");
+  border-radius: 8px;
 
   z-index: 3;
 
@@ -43,25 +52,6 @@
       transform: scale(1);
       opacity: 1;
       pointer-events: auto;
-  }
-
-  &:before {
-      content: '';
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      pointer-events: auto;
-      transform: rotate(45deg);
-
-      z-index: 2;
-
-      position: absolute;
-      left: 50%;
-      top: -6px;
-      margin-left: -6px;
-
-      background-color: white;
-      box-shadow: -1px -1px 2px rgba(0,0,0,.2);
   }
 }
 
@@ -94,70 +84,74 @@
   #dz-next {
     margin-left: 8px;
   }
-  
+
   .dz-title {
-    
+
     font-size: 13px;
     padding: 8px 8px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid @border;
-    
+
     h4 {
       margin: 0;
       padding: 0;
       font-size: 13px;
+      color: var(--color-title);
     }
-    
+
     button {
       margin-left: auto;
-      
+
       &:last-child {
         margin-left: 8px;
       }
-      
+
     }
-    
+
   }
-  
+
   .dz-days {
     width: 100%;
-    height: 24px;
+    padding: 8px 0;
 
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    
+
+    box-shadow: ~"0 1px 0 0 var(--color-border)";
+
     > div {
       flex: 1;
       text-align: center;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(0,0,0,.54);
+      color: var(--color-subtext);
     }
-    
+
   }
-  
+
   .dz-dates {
     width: 100%;
     height: auto;
-    
+    padding: 12px 0 4px 0;
+
     > button {
-      width: 35px;
-      height: 24px;
+      width: 36px;
+      height: auto;
+
       display: inline-block;
 
       background-color: inherit;
       box-shadow: none;
-      
+
       text-align: center;
       line-height: 24px;
       font-weight: normal;
       font-size: 13px;
       .monospaced();
-      
-      color: rgba(0,0,0,.87);
-      
+
+      color: var(--color-text);
+
       position: relative;
 
       padding: 0;
@@ -167,7 +161,7 @@
       appearance: none;
       border:none;
       outline: none;
-      
+
       .onHover() {
         content: '';
         width: 24px;
@@ -182,73 +176,73 @@
 
         border-radius: 12px;
 
-        background-color: #EEE;
+        background-color: var(--color-base3);
       }
-      
+
       &:hover, &:focus {
         cursor: pointer;
-        
+
         &:before {
           .onHover();
         }
-        
+
       }
 
       &.today {
-        
-        color: #FF5252;
-        
+
+        color: var(--color-dzcal-today);
+
         &:before {
           .onHover();
-          background-color: white;
+          background-color: var(--color-base);
           will-change: background;
           transition: background 0.2s ease;
         }
-        
+
         &:hover, &:focus {
           &:before {
-            color: #FF5252;
-            background-color: #EEEEEE;
+            color: var(--color-dzcal-today);
+            background-color: var(--color-base3);
           }
         }
-        
+
       }
 
       &.selected {
 
-        color: white;
+        color: var(--color-base);
         &:before {
           .onHover();
           will-change: background;
           transition: background 0.2s ease;
-          background-color: #018AFF;
+          background-color: var(--color-dzcal-selected);
         }
 
         &:hover {
-          color: #018AFF;
+          color: var(--color-dzcal-selected);
           &:before {
-            background-color: #EEEEEE;
+            background-color: var(--color-base3);
           }
         }
 
         &:focus {
-          color: #FFF;
+          color: var(--color-base);
           &:before {
-            background-color: #018AFF;
+            background-color: var(--color-dzcal-selected);
           }
         }
 
       }
-      
+
       &.disabled {
         pointer-events: none;
         opacity: 0.5;
       }
-      
+
     }
-    
+
   }
-  
+
 }
 
 #dz-timer {
