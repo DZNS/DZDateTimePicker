@@ -1,12 +1,12 @@
 'use strict';
 
 const findParent = (elem, id) => {
-    
+
   const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
-  
+
   if(checker(elem))
     return elem;
-    
+
   while(elem.parentNode) {
 
     elem = elem.parentNode
@@ -48,6 +48,14 @@ const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
     resolve(retval)
   })
 });
+
+window.wait = window.wait || async function (milliseconds = 0) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    })
+};
 
 // @prepros-append ./datepicker.js
 // @prepros-append ./timepicker.js
