@@ -266,8 +266,17 @@
             window[fn](calendar)
         })
         .then(() => {
-          const date = (this.source.hasAttribute("value") ? new Date(this.source.value) : new Date()).getDate()
+          
+          let date = new Date();
+
+          if (this.source.hasAttribute("value") && !!(this.source.value) && this.source.value.trim().length) {
+            date = new Date(this.source.value);
+          }
+
+          date = date.getDate();
+
           return measure(() => calendar.querySelector(`button:nth-child(${date})`))
+
         })
         .then(result => {
           if (result) {
@@ -429,7 +438,11 @@
 
     drawCalendar() {
 
-      let now = this.source.hasAttribute("value") ? new Date(this.source.value) : new Date()
+      let now = new Date();
+
+      if (this.source.hasAttribute("value") && !!(this.source.value) && this.source.value.trim().length) {
+        now = new Date(this.source.value);
+      }
 
       let year = now.getFullYear()
       let month = now.getMonth()
