@@ -354,7 +354,8 @@
 
     drawDates(dates) {
 
-      let now = new Date()
+      let now = new Date();
+      let today = new Date();
 
       if(this.source.nodeName === 'INPUT' && this.source.value)
         now = new Date(this.source.value)
@@ -387,22 +388,28 @@
         let classes = [];
 
         // check if the date is today
-        if (dateEqual(now, date))
-          classes.push('today')
+        if (dateEqual(today, date)) {
+          classes.push('today');
+        }
 
         // check if this is the selected value
-        if(val && dateEqual(date, val))
-          classes.push('selected')
+        if(val && dateEqual(date, val)) {
+          classes.push('selected');
+        }
 
         // check if the date is within the min range, if one is set
-        if(dateMin && (dateMin.getTime() - date.getTime()) > 0)
-          classes.push('disabled')
+        if(dateMin && (dateMin.getTime() - date.getTime()) > 0) {
+          classes.push('disabled');
+        }
 
         // check if the date is within the max range, if one is set
-        if(dateMax && (dateMax.getTime() - date.getTime()) < 0)
-          classes.push('disabled')
+        if(dateMax && (dateMax.getTime() - date.getTime()) < 0) {
+          classes.push('disabled');
+        }
+        
+        console.debug(classes);
 
-        classes = classes.join(' ')
+        classes = classes.join(' ');
 
         const days = {
           "Mon": "Monday",
@@ -414,19 +421,21 @@
           "Sun": "Sunday"
         }
 
-        let ariaString = date.toDateString()
-        ariaString = [ariaString.substr(0,3), ariaString.substr(4)]
-        ariaString[0] = `${days[ariaString[0]]}, `
+        let ariaString = date.toDateString();
+        ariaString = [ariaString.substr(0,3), ariaString.substr(4)];
+        ariaString[0] = `${days[ariaString[0]]}, `;
 
-        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)]
-        ariaString[1][0] = this.getFullMonthName(date.getMonth())
-        ariaString[1] = ariaString[1].join(" ")
-        ariaString = ariaString.join("")
+        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)];
+        ariaString[1][0] = this.getFullMonthName(date.getMonth());
+        ariaString[1] = ariaString[1].join(" ");
+        ariaString = ariaString.join("");
 
-        if (idx !== 0)
+        if (idx !== 0) {
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
-        else
+        }
+        else {
           markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+        }
 
       })
 
