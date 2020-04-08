@@ -1,6 +1,6 @@
 {
   "name": "dzdatetimepicker",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Functional, Extensible & Simple DateTime picker without any dependencies.",
   "main": "src/dzdatetimepicker.js",
   "dependencies": {},
