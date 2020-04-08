@@ -38,7 +38,12 @@ DZDateTimePicker will allow native browser implementations to take over if they 
 
 You can optionally initiate the date picker by wiring up a *trigger* element like so:
 ```html
-<button class="date-trigger" data-date-max="2016-05-09" data-date-min="2016-01-01" data-onset="didSetDate">Trigger</button>
+<button 
+  class="date-trigger" 
+  data-date-max="2016-05-09" 
+  data-date-min="2016-01-01" 
+  data-onset="didSetDate"
+>Trigger</button>
 ```
 
 The few important things to note are:  
@@ -54,7 +59,11 @@ Simply,
 
 You can optionally initiate the time picker by wiring up a *trigger* element like so:
 ```html
-<div role="button" class="trigger timer-trigger" data-onchange="didSetTime">Time Trigger</div>
+<div 
+  role="button" 
+  class="trigger timer-trigger" 
+  data-onchange="didSetTime"
+>Time Trigger</div>
 ```
 When the script loads, it automatically hooks on to elements with the class `timer-trigger`. No other configuration is necessary. Similar to the date picker, the last parameter, `onchange` is required if you need a callback when the user selects a date. This is optional, however, your implementation will require it if you need to update the UI. The implementation for this is intentionally left out.
 
@@ -71,8 +80,23 @@ The callback, unlike the date picker, responds with an object in the following f
 To setup a range picker, include the `rangepicker-dist.js` file along with the date-picker sources as mentioned above. Then you can can write simple markup as follows:  
 ```html
 <div id="range-picker">
-    <div role="button" class="trigger range-start" data-date-max="2017-05-09" data-date-min="2016-01-01" data-onset="didSetDate">Start</div>
-    <div role="button" class="trigger range-end" data-date-max="2017-05-09" data-date-min="2016-01-01" data-onset="didSetDate">End</div>
+  
+  <div 
+    role="button" 
+    class="trigger range-start" 
+    data-date-max="2017-05-09" 
+    data-date-min="2016-01-01" 
+    data-onset="didSetDate"
+  >Start</div>
+    
+  <div 
+    role="button" 
+    class="trigger range-end" 
+    data-date-max="2017-05-09" 
+    data-date-min="2016-01-01" 
+    data-onset="didSetDate"
+  >End</div>
+  
 </div>
 ```
 
