@@ -213,7 +213,8 @@
           return false
         }
 
-        let rect = evt.target.getBoundingClientRect()
+        let rect = evt.target.getBoundingClientRect();
+
         let center = {
           x: rect.left + (rect.width / 2),
           y: rect.top + rect.height
@@ -241,11 +242,15 @@
           // the width before showing = actual width * 0.25
           let width = calendarRect.width * 4
 
-          calendar.style.left = (center.x - width/2) + 'px'
-          calendar.style.top = (center.y - rect.height) + 'px'
+          calendar.style.left = (center.x - width/2) + 'px';
 
-          let prev = calendar.children[0].children[1]
-          let next = calendar.children[0].children[2]
+          // center.y + half of the pointer's height
+          calendar.style.top = (center.y + 6) + 'px'; 
+
+          console.debug(calendar.style.top);
+
+          let prev = calendar.children[0].children[1];
+          let next = calendar.children[0].children[2];
 
           prev.addEventListener('click', prevClick, false)
           next.addEventListener('click', nextClick, false)
@@ -406,8 +411,6 @@
         if(dateMax && (dateMax.getTime() - date.getTime()) < 0) {
           classes.push('disabled');
         }
-        
-        console.debug(classes);
 
         classes = classes.join(' ');
 

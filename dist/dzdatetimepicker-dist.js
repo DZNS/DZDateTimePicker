@@ -1,2 +1,1150 @@
-"use strict";const findParent=(e,t)=>{const i=e=>e.getAttribute("id")===t||e.classList.contains(t);if(i(e))return e;for(;e.parentNode;){if((e=e.parentNode)===document.body||e===document)return;if(i(e))return e}},inputFocus=e=>(e&&e.preventDefault&&e.preventDefault(),e.target.blur(),!1),inputBlur=e=>(e&&e.preventDefault&&e.preventDefault(),!1),measure=(e=function(){})=>new Promise((t,i)=>{window.requestAnimationFrame(()=>{const i=e();t(i)})}),mutate=(e=function(){})=>new Promise((t,i)=>{window.requestAnimationFrame(()=>{const i=e();t(i)})});window.wait=window.wait||async function(e=0){return new Promise(t=>{setTimeout(()=>{t()},e)})},(e=>{class t{constructor(e){this.customClass=e,this.init()}init(){if(this.initialized)return!1;this.initialized=!0,this.setupHooks()}setupHooks(){const t=e=>{e&&e.preventDefault&&e.preventDefault();let t=this.getCalendar(),i=t.dataset.current.split("-"),n=new Date(i[0],i[1]),a=new Date(n.getFullYear(),n.getMonth()-1),s=this.drawDates(this.getDaysArrayByMonth(a)),l=document.querySelector("#dz-calendar .dz-dates");t.insertAdjacentHTML("beforeEnd",s),s=t.children[t.children.length-1],t.removeChild(l);let o=a.getFullYear(),d=a.getMonth();return t.dataset.current=`${o} - ${d}`,t.children[0].children[0].innerHTML=`${this.getMonthName(d)}, ${o}`,r(),!1},i=e=>{e&&e.preventDefault&&e.preventDefault();let t=this.getCalendar(),i=t.dataset.current.split("-"),n=new Date(i[0],i[1]),a=new Date(n.getFullYear(),n.getMonth()+1),s=this.drawDates(this.getDaysArrayByMonth(a)),l=document.querySelector("#dz-calendar .dz-dates");t.insertAdjacentHTML("beforeEnd",s),s=t.children[t.children.length-1],t.removeChild(l);let o=a.getFullYear(),d=a.getMonth();return t.dataset.current=`${o} - ${d}`,t.children[0].children[0].innerHTML=`${this.getMonthName(d)}, ${o}`,r(),!1};this.bodyClick=e=>{let t=this.getCalendar();if(t)if(t.classList.contains("active")){if(!this.isInCalendar(e.target))return this.cleanupCalendar(e,t)}else document.body.removeChild(t)},this.bodyInput=e=>{const{keyCode:t}=e,i=this.getCalendar();if(36==t||35==t){const e=i.querySelector(`.dz-dates button:${36==t?"first-child":"last-child"}`);return e&&e.focus(),!0}if(t>=37&&t<=40){let e=Number(document.activeElement.innerHTML)||0;40==t?e+=7:38==t?e-=7:37==t?e-=1:e+=1;const n=i.querySelector(`.dz-dates button:nth-child(${e})`);return n&&n.focus(),!0}return 33==t?(i.querySelector("#dz-prev").click(),!0):34==t?(i.querySelector("#dz-next").click(),!0):(13!=t&&27!=t||32!=t||13!=t&&32!=t||document.activeElement.getAttribute("aria-label").click(),!0)};const n=e=>{let t=this.getCalendar(),i=parseInt(e.target.innerHTML),n=t.dataset.current.split("-");i=new Date(n[0],n[1],i);let r=window[this.source.dataset.onset];r&&r(i);let a=i.getMonth()+1;1===a.toString().length&&(a="0"+a);let s=i.getDate();1===s.toString().length&&(s="0"+s);let l=[i.getFullYear(),a,s].join("-");return"INPUT"===this.source.nodeName?(this.source.value=l,"InputEvent"in window?this.source.dispatchEvent(new InputEvent("input")):this.source.dispatchEvent(new Event("input"))):this.source.dataset.dateVal&&(this.source.dataset.dateVal=l),this.callback&&this.callback(this.source,l),this.cleanupCalendar(e,t)},r=()=>{this.getCalendar()&&Array.prototype.slice.call(document.querySelectorAll("#dz-calendar .dz-dates button")).forEach(e=>{e.classList.contains("disabled")||e.addEventListener("click",n,!1)})},a=e=>{let n=this.getCalendar();if(n)return this.cleanupCalendar(e,n),setTimeout(()=>{a(e)},350),!1;let s=e.target.getBoundingClientRect(),l=s.left+s.width/2,o=s.top+s.height,d="INPUT"===e.target.nodeName?e.target:findParent(e.target,this.customClass||"date-trigger");this.source=d;let u=this.drawCalendar();return mutate(()=>{document.body.insertAdjacentHTML("beforeEnd",u)}).then(()=>(u=document.getElementById("dz-calendar"),measure(()=>u.getBoundingClientRect()))).then(e=>{let n=4*e.width;u.style.left=l-n/2+"px",u.style.top=o-s.height+"px";let r=u.children[0].children[1],a=u.children[0].children[2];return r.addEventListener("click",t,!1),a.addEventListener("click",i,!1),mutate(()=>{u.classList.add("active"),this.source.setAttribute("aria-expanded","true"),this.source.hasAttribute("id")&&u.setAttribute("aria-describedby",this.source.getAttribute("id"))})}).then(()=>{r();let e="didShowDatePicker";window[e]&&window[e](u)}).then(()=>{let e=new Date;return this.source.hasAttribute("value")&&this.source.value&&this.source.value.trim().length&&(e=new Date(this.source.value)),e=e.getDate(),measure(()=>u.querySelector(`button:nth-child(${e})`))}).then(e=>{e&&e.focus(),document.body.addEventListener("click",this.bodyClick,!1),document.body.addEventListener("keydown",this.bodyInput,!1)}).then(e=>{setTimeout(()=>{this.repositionCalendarWithinViewport()},100)}).catch(e=>{console.error(e)}),!1};let s=document.querySelectorAll(this.customClass?"."+this.customClass:".date-trigger");s=Array.prototype.slice.call(s);const l=e=>{e&&(e.addEventListener("click",a,!1),"INPUT"===e.nodeName&&(e.addEventListener("focus",inputFocus,!1),e.addEventListener("blur",inputBlur,!1),e.setAttribute("aria-haspopup","true"),e.setAttribute("aria-expanded","false")))};s.forEach(e=>{l(e)}),e.attachDateTrigger=l}getCalendar(){return document.getElementById("dz-calendar")}isInCalendar(e){let t=findParent(e,"dz-calendar");return t!==document.body&&null!=t}getMonthName(e){return["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].splice(e,1)}getFullMonthName(e){return["January","February","March","April","May","June","July","August","September","October","November","December"].splice(e,1)}getDaysArrayByMonth(e){let t=e.getFullYear(),i=e.getMonth(),n=new Date(t,i+1,0).getDate(),r=[];for(;n>0;)r.push(new Date(t,i,n)),n--;return r.reverse()}drawDates(e){let t=new Date,i=new Date;"INPUT"===this.source.nodeName&&this.source.value?t=new Date(this.source.value):this.source.dataset.dateVal&&(t=new Date(this.source.dataset.dateVal));let n='<div class="dz-dates">',{dateMax:r,dateMin:a}=(this.getCalendar(),this.source.dataset);r&&(r=new Date(r)),a&&(a=new Date(a));let s=null;"INPUT"===this.source.nodeName?s=new Date(this.source.value):this.source.dataset.dateVal&&(s=new Date(this.source.dataset.dateVal));let l=e[0].getDay();const o=(e,t)=>e.getDate()===t.getDate()&&e.getMonth()===t.getMonth()&&e.getYear()==t.getYear();return e.forEach((e,t)=>{let d=[];o(i,e)&&d.push("today"),s&&o(e,s)&&d.push("selected"),a&&a.getTime()-e.getTime()>0&&d.push("disabled"),r&&r.getTime()-e.getTime()<0&&d.push("disabled"),console.debug(d),d=d.join(" ");let u=e.toDateString();u=[u.substr(0,3),u.substr(4)],u[0]=`${{Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday",Fri:"Friday",Sat:"Saturday",Sun:"Sunday"}[u[0]]}, `,u[1]=[u[1].substr(0,3),u[1].substr(4)],u[1][0]=this.getFullMonthName(e.getMonth()),u[1]=u[1].join(" "),u=u.join(""),n+=0!==t?`<button aria-label="${u}" class="${d}">${e.getDate()}</button>`:`<button style="margin-left:${36*l}px;" aria-label="${u}" class="${d}">${e.getDate()}</button>`}),n+="</div>",n}drawCalendar(){let e=new Date;this.source.hasAttribute("value")&&this.source.value&&this.source.value.trim().length&&(e=new Date(this.source.value));let t=e.getFullYear(),i=e.getMonth(),n=this.getDaysArrayByMonth(e),r=`<div id="dz-calendar" class="inline-container" data-current="${t}-${i}"  role="dialog" aria-label="Calendar">\n        <div class="dz-title">\n           <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(e.getMonth())}, ${e.getFullYear()}">${this.getMonthName(e.getMonth())}, ${e.getFullYear()}</h4>\n           <button id="dz-prev" aria-label="Previous Month" title="Previous Month"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#007AFF" fill-rule="evenodd"/></svg></button></button>\n           <button id="dz-next" aria-label="Next Month" title="Next Month"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#007AFF" fill-rule="evenodd"/></svg></button>\n        </div>\n        <div class="dz-days">`;return["S","M","T","W","T","F","S"].forEach(e=>{r+=`<div>${e}</div>`}),r+=`</div>\n        ${this.drawDates(n)}\n      </div>`,r}repositionCalendarWithinViewport(){const t=this.getCalendar();if(!t)return;const i=t.getBoundingClientRect();if(i.x<0){const e=i.x-Number(t.style.left.replace("px",""))-8;t.style.left=e+"px",t.classList.add("zp-l")}if(i.x+i.width>e.innerWidth){const n=e.innerWidth-i.width-48;t.style.left=n+"px",t.classList.add("zp-r");const r=t.parentNode.querySelector("#dz-calendar",":before");console.log(r.style.left)}}cleanupCalendar(e,t){return e&&e.preventDefault&&e.preventDefault(),t&&mutate(()=>{t.classList.remove("active")}).then(()=>wait(300)).then(()=>{t&&t.parentNode&&t.parentNode.removeChild(t)}).then(()=>this.source?mutate(()=>this.source.setAttribute("aria-expanded","false")):Promise.resolve()).then(()=>{document.body.removeEventListener("click",this.bodyClick,!1),document.body.removeEventListener("keydown",this.bodyInput,!1)}).catch(e=>{console.error(e)}),!1}}e&&e.exports?e.exports=Object.assign({},{DatePicker:t,datePicker:new t}):(e.DatePicker=t,e.datePicker=new t)})("undefined"==typeof module?window:module),(e=>{class t{constructor(){this.init()}init(){if(this.initialized)return!1;this.initialized=!0,this.setupHooks()}setupHooks(){this.bodyClick=e=>{if("SELECT"===e.target.nodeName)return!1;let t=this.getTimer();if(t)if(t.classList.contains("active")){if(!this.isInTimer(e.target))return this.cleanupTimer(e,t)}else document.body.removeChild(t);document.body.removeEventListener("click",this.bodyClick,!1)},this.bodyInput=e=>{const{keyCode:t}=e;return 13!=t&&27!=t||(27==t&&this.hasOwnProperty("originalValue")&&(this.source.value=this.originalValue),this.hasOwnProperty("originalValue")&&this.originalValue,this.cleanupTimer(void 0,this.getTimer())),!0};const e=()=>{let e=this.getTimer(),t=parseInt(e.children[0].value),i=parseInt(e.children[1].value),n=parseInt(e.children[2].value);1===n&&12!=t&&(t+=12),12===t&&0===n&&(t="00"),"INPUT"===this.source.nodeName&&(this.source.value=t+":"+i,"InputEvent"in window?this.source.dispatchEvent(new InputEvent("input")):this.source.dispatchEvent(new Event("input")));let r=window[this.source.dataset.onchange];r&&r({string:t+":"+i,hours:parseInt(t),minutes:i})},t=i=>{let n=this.getTimer();if(n)return this.cleanupTimer(i,n),setTimeout(()=>{t(i)},300),!1;let r=i.target.getBoundingClientRect(),a=r.left,s=r.top+r.height;this.source=i.target;let l=this.drawTimer();return mutate(()=>{document.body.insertAdjacentHTML("beforeEnd",l)}).then(()=>{if(l=this.getTimer(),"INPUT"!==this.source.nodeName||!this.source.value.length){let e=new Date,t=e.getHours(),i=e.getMinutes();return mutate(()=>{l.children[0].value=t>12?t-12:t,l.children[1].value=i,l.children[2].value=t>=12?1:0})}return Promise.resolve()}).then(()=>(Array.prototype.slice.call(l.children).forEach(t=>{t.addEventListener("change",e,!1)}),measure(()=>l.getBoundingClientRect()))).then(e=>{e.width;return l.style.left=a-16+"px",l.style.top=s+"px",mutate(()=>{l.classList.add("active"),this.source.setAttribute("aria-expanded","true"),this.source.hasAttribute("id")&&l.setAttribute("aria-describedby",this.source.getAttribute("id"))})}).then(()=>{l.querySelector("select").focus(),this.originalValue=this.source.value,document.body.addEventListener("click",this.bodyClick,!1),document.body.addEventListener("keydown",this.bodyInput,!1)}).catch(e=>{console.error(e)}),!1},i=e=>{e&&(e.addEventListener("click",t,!1),"INPUT"===e.nodeName&&(e.addEventListener("focus",inputFocus,!1),e.addEventListener("blur",inputBlur,!1),e.setAttribute("aria-haspopup","true"),e.setAttribute("aria-expanded","false")))};Array.prototype.slice.call(document.querySelectorAll(".timer-trigger")).forEach(e=>{i(e)}),window.attachTimeTrigger=i}getTimer(){return document.getElementById("dz-timer")}isInTimer(e){let t=findParent(e,"dz-timer");return t!==document.body&&null!=t}drawTimer(){let e,t,i=null,n=!1;"INPUT"===this.source.nodeName&&(i=this.source.value),i&&(i=i.split(":"),e=parseInt(i[0]),t=i[1],e>=12&&(n=!0));let r='<div id="dz-timer" class="inline-container" role="dialog" aria-label="Time picker">\n        <select class="hours">',a=Array.from(Array(13).keys());return a.shift(),r+=a.map(t=>t===e?`<option value='${t}' selected='selected'>${t}</option>`:`<option value='${t}'>${t}</option>`).join(" "),r+='</select>\n        <select class="minutes">',r+=Array.from(Array(60).keys()).map(e=>(1===e.toString().length&&(e="0"+e),e.toString()===t?`<option value='${e}' selected='selected'>${e}</option>`:`<option value='${e}'>${e}</option>`)).join(" "),r+=`</select>\n        <select class="shift">\n          <option value='0' ${n?"":"selected='selected'"}>AM</option>\n          <option value='1' ${n?"selected='selected'":""}>PM</option>\n        </select>`,r+="</select>\n      </div>",r}cleanupTimer(e,t){return e&&e.preventDefault&&e.preventDefault(),t&&mutate(()=>{t.classList.remove("active")}).then(()=>wait(500)).then(()=>{this.source=void 0,t.parentNode&&document.body.removeChild(t)}).catch(e=>{console.error(e)}),document.body.removeEventListener("click",this.bodyClick,!1),document.body.removeEventListener("keydown",this.bodyInput,!1),!1}}e&&e.exports?e.exports=Object.assign({},{TimePicker:t,timePicker:new t}):(e.TimePicker=t,e.timePicker=new t)})("undefined"==typeof module?window:module),(e=>{class t{constructor(e){this.elem=e,this.initialized=!1,this.init()}init(){if(!this.elem)return;if(this.initialized)return;this.initialized=!0;let e=+new Date;this.startElem=this.elem.querySelector(".range-start"),this.endElem=this.elem.querySelector(".range-end"),this.startElem.setAttribute("type","text"),this.endElem.setAttribute("type","text"),this.startElem.classList.add("start"+e),this.endElem.classList.add("end"+e),this.startController=new DatePicker("start"+e),this.endController=new DatePicker("end"+e),this.startController.callback=this.callback.bind(this),this.endController.callback=this.startController.callback}callback(){let e=[...arguments],t=e[1],i=e[0].classList.contains("range-start");i?this.start=t:this.end=t,i?this.endElem.dataset.dateMin=t:this.startElem.dataset.dateMax=t}}e.hasOwnProperty("exports")?e.exports=Object.assign({},e.exports,t):e.RangePicker=t})("undefined"==typeof module?window:module),(e=>{if(!e)return;let t={date:!1,time:!1,"datetime-local":!1},i=document.createElement("input");Object.keys(t).forEach(e=>{i.type=e,t[e]=i.type===e});const n=/([\d]{4}\-[\d]{2}\-[\d]{2})T([\d]{2}\:[\d]{2})/,r=()=>{Array.prototype.slice.call(document.querySelectorAll('input[type="time"]')).forEach(attachTimeTrigger)},a=()=>{Array.prototype.slice.call(document.querySelectorAll('input[type="date"]')).forEach(attachDateTrigger)},s=()=>{Array.prototype.slice.call(document.querySelectorAll('input[type="datetime-local"]')).forEach(e=>{const i=e,r=i.parentNode,a=()=>r.querySelector("input[data-original='datetime-local']");let s=i.value,l=null,o=null;s.trim().length>0&&n.test(s)&&(l=s.replace(n,"$1"),o=s.replace(n,"$2"));i.__defineGetter__("value",(function(){return((this.dataset.date||"")+" "+(this.dataset.time||"")).trim()})),i.type="hidden",i.dataset.original="datetime-local";let d=document.createElement("input");d.type=t.date?"date":"text",d.placeholder="Date",d.oninput=e=>{a().dataset.date=e.target.value},l&&(d.value=l);let{dateMin:u,dateMax:c}=i.dataset;u&&(d.dataset.dateMin=u),c&&(d.dataset.dateMax=c);let h=document.createElement("input");h.type=t.time?"time":"text",h.placeholder="Time",h.oninput=e=>{a().dataset.time=e.target.value},o&&(h.value=o),[d,h].forEach(e=>{e.__defineGetter__("required",(function(){return i.required})),e.__defineGetter__("validity",(function(){return i.validity})),e.__defineGetter__("pattern",(function(){return i.pattern})),e.__defineGetter__("validationMessage",(function(){return i.validationMessage})),e.__defineSetter__("validationMessage",(function(e){i.validationMessage=e}))}),r.insertAdjacentElement("beforeEnd",d),r.insertAdjacentElement("beforeEnd",h),attachDateTrigger(d),attachTimeTrigger(h)})};t.date||a(),t.time||r(),t["datetime-local"]||s(),e.hookDate=a,e.hookTime=r,e.hookDateTimer=s})("undefined"==typeof module?window:void 0);
+'use strict';
+
+const findParent = (elem, id) => {
+
+  const checker = i => i.getAttribute('id') === id || i.classList.contains(id)
+
+  if(checker(elem))
+    return elem;
+
+  while(elem.parentNode) {
+
+    elem = elem.parentNode
+
+    if(elem === document.body || elem === document)
+      return undefined
+
+    if(checker(elem))
+      return elem
+
+  }
+
+  return undefined
+};
+
+const inputFocus = (evt) => {
+  if(evt && evt.preventDefault)
+    evt.preventDefault()
+  evt.target.blur()
+  return false
+};
+
+const inputBlur = (evt) => {
+  if(evt && evt.preventDefault)
+    evt.preventDefault()
+  return false
+};
+
+const measure = (fn = function() {}) => new Promise((resolve, reject) => {
+   window.requestAnimationFrame(() => {
+    const retval = fn()
+    resolve(retval)
+  })
+});
+
+const mutate = (fn = function() {}) => new Promise((resolve, reject) => {
+  window.requestAnimationFrame(() => {
+    const retval = fn()
+    resolve(retval)
+  })
+});
+
+window.wait = window.wait || async function (milliseconds = 0) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    })
+};
+
+// @prepros-append ./datepicker.js
+// @prepros-append ./timepicker.js
+// @prepros-append ./rangepicker.js
+// @prepros-append ./autohook.js
+
+((glob) => {
+
+  const prevSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Previous Month</title><path d="M14.422 16.078l-1.406 1.406-6-6 6-6 1.406 1.407-4.594 4.593z" fill="#007AFF" fill-rule="evenodd"/></svg></button>`;
+  const nextSVG = `<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Next Month</title><path d="M8.578 16.36l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z" fill="#007AFF" fill-rule="evenodd"/></svg>`;
+
+  class DatePicker {
+
+    constructor(customClass) {
+      this.customClass = customClass
+      this.init()
+    }
+
+    init() {
+      if(this.initialized)
+        return false
+
+      this.initialized = true
+
+      this.setupHooks()
+    }
+
+    setupHooks() {
+
+      const prevClick = (evt) => {
+
+        if(evt && evt.preventDefault)
+          evt.preventDefault()
+
+        let calendar = this.getCalendar()
+        let currentString = calendar.dataset.current.split('-')
+        let current = new Date(currentString[0], currentString[1])
+
+        let previous = new Date(current.getFullYear(), current.getMonth() - 1)
+
+        let newDates = this.drawDates(this.getDaysArrayByMonth(previous))
+        let currentDates = document.querySelector('#dz-calendar .dz-dates')
+
+        calendar.insertAdjacentHTML('beforeEnd', newDates)
+        newDates = calendar.children[calendar.children.length-1]
+
+        calendar.removeChild(currentDates)
+
+        let year = previous.getFullYear()
+        let month = previous.getMonth()
+
+        calendar.dataset.current = `${year} - ${month}`
+        calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
+
+        hookDates()
+
+        return false
+
+      }
+
+      const nextClick = (evt) => {
+
+        if(evt && evt.preventDefault)
+          evt.preventDefault()
+
+        let calendar = this.getCalendar()
+        let currentString = calendar.dataset.current.split('-')
+        let current = new Date(currentString[0], currentString[1])
+
+        let next = new Date(current.getFullYear(), current.getMonth() + 1)
+
+        let newDates = this.drawDates(this.getDaysArrayByMonth(next))
+        let currentDates = document.querySelector('#dz-calendar .dz-dates')
+
+        calendar.insertAdjacentHTML('beforeEnd', newDates)
+        newDates = calendar.children[calendar.children.length-1]
+
+        calendar.removeChild(currentDates)
+
+        let year = next.getFullYear()
+        let month = next.getMonth()
+
+        calendar.dataset.current = `${year} - ${month}`
+        calendar.children[0].children[0].innerHTML = `${this.getMonthName(month)}, ${year}`
+
+        hookDates()
+
+        return false
+
+      }
+
+      this.bodyClick = (evt) => {
+
+        let calendar = this.getCalendar()
+
+        if(calendar)
+          if(!calendar.classList.contains('active'))
+            document.body.removeChild(calendar)
+          else if(!this.isInCalendar(evt.target)) {
+            return this.cleanupCalendar(evt, calendar)
+        }
+      }
+
+      this.bodyInput = (evt) => {
+        const {keyCode} = evt
+
+        const calendar = this.getCalendar()
+
+        if (keyCode == 36 || keyCode == 35) {
+          // pressed Home or End
+          const elem = calendar.querySelector(`.dz-dates button:${keyCode == 36 ? 'first-child' : 'last-child'}`)
+          if (elem)
+            elem.focus()
+          return true
+        }
+
+        if (keyCode >= 37 && keyCode <= 40) {
+          // up or down arrow keys
+          const current = Number(document.activeElement.innerHTML) || 0
+
+          let expected = current
+          if (keyCode == 40) expected += 7; // down
+          else if (keyCode == 38) expected -= 7; // up
+          else if (keyCode == 37) expected -= 1; // left
+          else expected += 1; // right
+
+          const elem = calendar.querySelector(`.dz-dates button:nth-child(${expected})`)
+          if (elem)
+            elem.focus()
+          return true
+        }
+
+        if (keyCode == 33) {
+          calendar.querySelector("#dz-prev").click()
+          return true
+        }
+
+        if (keyCode == 34) {
+          calendar.querySelector("#dz-next").click()
+          return true
+        }
+
+        if (keyCode != 13 && keyCode != 27 || keyCode != 32)
+          return true
+
+        if (keyCode == 13 || keyCode == 32) {
+           // user has pressed the enter or space key. Assume to be a confirmation
+           document.activeElement.getAttribute("aria-label").click()
+           // the above click will automatically clean up the calendar
+        }
+
+        return true
+      }
+
+      const dateClick = (evt) => {
+
+        let calendar = this.getCalendar()
+        let date = parseInt(evt.target.innerHTML)
+
+        let currentString = calendar.dataset.current.split('-')
+        date = new Date(currentString[0],currentString[1],date)
+
+        let fn = window[this.source.dataset.onset]
+        if(fn)
+          fn(date)
+
+        // zero pad the month if needed
+        let month = date.getMonth() + 1
+        if(month.toString().length === 1)
+          month = "0" + month
+        // zero pad the date if needed
+        let dateStr = date.getDate()
+        if(dateStr.toString().length === 1)
+          dateStr = "0" + dateStr
+
+        let val = [date.getFullYear(), month, dateStr].join('-')
+
+        if(this.source.nodeName === 'INPUT') {
+          this.source.value = val
+          if ('InputEvent' in window)
+            this.source.dispatchEvent(new InputEvent('input'))
+          else
+            this.source.dispatchEvent(new Event('input'))
+        }
+        else if(this.source.dataset.dateVal)
+          this.source.dataset.dateVal = val
+
+        if (this.callback)
+          this.callback(this.source, val)
+
+        return this.cleanupCalendar(evt, calendar)
+
+      }
+
+      const hookDates = () => {
+
+        let calendar = this.getCalendar()
+        if(!calendar)
+          return
+
+        let dates = Array.prototype.slice.call(document.querySelectorAll('#dz-calendar .dz-dates button'))
+        dates.forEach((item) => {
+          if(!item.classList.contains('disabled'))
+            item.addEventListener('click', dateClick, false)
+        })
+
+      }
+
+      const triggerClick = (evt) => {
+
+        // check if calendar is already being shown
+        let phantom = this.getCalendar()
+
+        if(phantom) {
+          this.cleanupCalendar(evt, phantom)
+          setTimeout(() => {
+            triggerClick(evt)
+          }, 350)
+          return false
+        }
+
+        let rect = evt.target.getBoundingClientRect();
+
+        let center = {
+          x: rect.left + (rect.width / 2),
+          y: rect.top + rect.height
+        }
+
+        let target = evt.target.nodeName === "INPUT" ?
+                      evt.target :
+                      findParent(evt.target, this.customClass || 'date-trigger')
+
+        this.source = target
+
+        let calendar = this.drawCalendar()
+
+        mutate(() => {
+          document.body.insertAdjacentHTML('beforeEnd', calendar)
+        })
+        .then(() => {
+          calendar = document.getElementById('dz-calendar')
+          return measure(() => calendar.getBoundingClientRect())
+        })
+        .then(result => {
+          // position the calendar near the origin point
+          const calendarRect = result
+
+          // the width before showing = actual width * 0.25
+          let width = calendarRect.width * 4
+
+          calendar.style.left = (center.x - width/2) + 'px';
+
+          // center.y + half of the pointer's height
+          calendar.style.top = (center.y + 6) + 'px'; 
+
+          console.debug(calendar.style.top);
+
+          let prev = calendar.children[0].children[1];
+          let next = calendar.children[0].children[2];
+
+          prev.addEventListener('click', prevClick, false)
+          next.addEventListener('click', nextClick, false)
+
+          return mutate(() => {
+            calendar.classList.add('active')
+            this.source.setAttribute("aria-expanded", "true")
+            if (this.source.hasAttribute("id")) {
+              calendar.setAttribute("aria-describedby", this.source.getAttribute("id"))
+            }
+          })
+        })
+        .then(() => {
+          hookDates()
+
+          let fn = 'didShowDatePicker'
+          if(window[fn])
+            window[fn](calendar)
+        })
+        .then(() => {
+          
+          let date = new Date();
+
+          if (this.source.hasAttribute("value") && !!(this.source.value) && this.source.value.trim().length) {
+            date = new Date(this.source.value);
+          }
+
+          date = date.getDate();
+
+          return measure(() => calendar.querySelector(`button:nth-child(${date})`))
+
+        })
+        .then(result => {
+          if (result) {
+            result.focus()
+          }
+          document.body.addEventListener('click', this.bodyClick, false)
+          document.body.addEventListener('keydown', this.bodyInput, false)
+        })
+        .then(result => {
+          setTimeout(() => {
+            this.repositionCalendarWithinViewport()
+          }, 100)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
+        return false
+
+      }
+
+      let triggers = document.querySelectorAll(this.customClass ? "." + this.customClass : '.date-trigger')
+      triggers = Array.prototype.slice.call(triggers)
+
+      const attachTrigger = (elem) => {
+        if(!elem) return
+        elem.addEventListener('click', triggerClick, false)
+        if(elem.nodeName === "INPUT") {
+          elem.addEventListener('focus', inputFocus, false)
+          elem.addEventListener('blur', inputBlur, false)
+          elem.setAttribute("aria-haspopup", "true")
+          elem.setAttribute("aria-expanded", "false")
+        }
+      }
+
+      triggers.forEach((item) => {
+        attachTrigger(item)
+      })
+
+      glob.attachDateTrigger = attachTrigger
+
+    }
+
+    getCalendar() {
+      return document.getElementById("dz-calendar")
+    }
+
+    isInCalendar(elem) {
+      let parent = findParent(elem, 'dz-calendar')
+      return parent !== document.body && parent != undefined
+    }
+
+    getMonthName(idx) {
+      return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].splice(idx, 1)
+    }
+
+    getFullMonthName(idx) {
+      return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].splice(idx, 1)
+    }
+
+    getDaysArrayByMonth(date) {
+
+      let year = date.getFullYear()
+      let month = date.getMonth()
+      let monthRange = new Date(year, month + 1, 0).getDate()
+      let days = []
+
+      while(monthRange > 0) {
+        days.push(new Date(year, month, monthRange))
+        monthRange--;
+      }
+
+      return days.reverse()
+    }
+
+    drawDates(dates) {
+
+      let now = new Date();
+      let today = new Date();
+
+      if(this.source.nodeName === 'INPUT' && this.source.value)
+        now = new Date(this.source.value)
+      else if (this.source.dataset.dateVal)
+        now = new Date(this.source.dataset.dateVal)
+
+      let markup = `<div class="dz-dates">`
+      let calendar = this.getCalendar()
+
+      let {dateMax, dateMin} = this.source.dataset
+
+      if(dateMax)
+        dateMax = new Date(dateMax)
+      if(dateMin)
+        dateMin = new Date(dateMin)
+
+      let val = null
+      if(this.source.nodeName === 'INPUT')
+        val = new Date(this.source.value)
+      else if (this.source.dataset.dateVal)
+        val = new Date(this.source.dataset.dateVal)
+
+      // find offset of first date.
+      let offsetDay = dates[0].getDay()
+
+      const dateEqual = (base, compare) => base.getDate() === compare.getDate() && base.getMonth() === compare.getMonth() && base.getYear() == compare.getYear()
+
+      dates.forEach((date, idx) => {
+
+        let classes = [];
+
+        // check if the date is today
+        if (dateEqual(today, date)) {
+          classes.push('today');
+        }
+
+        // check if this is the selected value
+        if(val && dateEqual(date, val)) {
+          classes.push('selected');
+        }
+
+        // check if the date is within the min range, if one is set
+        if(dateMin && (dateMin.getTime() - date.getTime()) > 0) {
+          classes.push('disabled');
+        }
+
+        // check if the date is within the max range, if one is set
+        if(dateMax && (dateMax.getTime() - date.getTime()) < 0) {
+          classes.push('disabled');
+        }
+
+        classes = classes.join(' ');
+
+        const days = {
+          "Mon": "Monday",
+          "Tue": "Tuesday",
+          "Wed": "Wednesday",
+          "Thu": "Thursday",
+          "Fri": "Friday",
+          "Sat": "Saturday",
+          "Sun": "Sunday"
+        }
+
+        let ariaString = date.toDateString();
+        ariaString = [ariaString.substr(0,3), ariaString.substr(4)];
+        ariaString[0] = `${days[ariaString[0]]}, `;
+
+        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)];
+        ariaString[1][0] = this.getFullMonthName(date.getMonth());
+        ariaString[1] = ariaString[1].join(" ");
+        ariaString = ariaString.join("");
+
+        if (idx !== 0) {
+          markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+        }
+        else {
+          markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+        }
+
+      })
+
+      markup += `</div>`
+
+      return markup
+
+    }
+
+    drawCalendar() {
+
+      let now = new Date();
+
+      if (this.source.hasAttribute("value") && !!(this.source.value) && this.source.value.trim().length) {
+        now = new Date(this.source.value);
+      }
+
+      let year = now.getFullYear()
+      let month = now.getMonth()
+
+      let dates = this.getDaysArrayByMonth(now)
+      let days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+
+      let markup = `<div id="dz-calendar" class="inline-container" data-current="${year}-${month}"  role="dialog" aria-label="Calendar">
+        <div class="dz-title">
+           <h4 aria-role="Presentation" aria-label="${this.getFullMonthName(now.getMonth())}, ${now.getFullYear()}">${this.getMonthName(now.getMonth())}, ${now.getFullYear()}</h4>
+           <button id="dz-prev" aria-label="Previous Month" title="Previous Month">${prevSVG}</button>
+           <button id="dz-next" aria-label="Next Month" title="Next Month">${nextSVG}</button>
+        </div>
+        <div class="dz-days">`
+
+      days.forEach((day) => {
+        markup += `<div>${day}</div>`
+      })
+
+      markup += `</div>
+        ${this.drawDates(dates)}
+      </div>`
+
+      return markup
+    }
+
+    repositionCalendarWithinViewport () {
+
+      const calendar = this.getCalendar()
+
+      if (!calendar)
+        return;
+      const rect = calendar.getBoundingClientRect();
+
+      if (rect.x < 0) {
+        // move it to the right
+        const left = rect.x - Number(calendar.style.left.replace("px", "")) - 8;
+        calendar.style.left = left + "px"
+        calendar.classList.add("zp-l")
+      }
+
+      if ((rect.x + rect.width) > glob.innerWidth) {
+        // pull it back
+        const right = glob.innerWidth - rect.width - 48;
+        calendar.style.left = right + "px";
+
+        calendar.classList.add("zp-r")
+
+        // reposition the pointer
+        const beforeElem = calendar.parentNode.querySelector("#dz-calendar", ":before");
+        console.log(beforeElem.style.left);
+      }
+
+    }
+
+    cleanupCalendar(evt, calendar) {
+
+      if(evt && evt.preventDefault)
+        evt.preventDefault()
+
+      if(calendar) {
+
+        mutate(() => {
+          calendar.classList.remove('active')
+        })
+        .then(() => wait(300))
+        .then(() => {
+          if (calendar && calendar.parentNode)
+            calendar.parentNode.removeChild(calendar)
+        })
+        .then(() => {
+          if (this.source) {
+            return mutate(() => this.source.setAttribute("aria-expanded", "false"))
+          }
+
+          return Promise.resolve()
+        })
+        .then(() => {
+          document.body.removeEventListener('click', this.bodyClick, false)
+          document.body.removeEventListener('keydown', this.bodyInput, false)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
+      }
+
+      return false
+
+    }
+
+  }
+
+  if(glob && glob.exports)
+    glob.exports = Object.assign({}, {
+      'DatePicker': DatePicker,
+      'datePicker': new DatePicker()
+    })
+
+  else {
+    glob.DatePicker = DatePicker
+    glob.datePicker = new DatePicker()
+  }
+
+})(typeof module === "undefined" ? window : module);
+
+((glob) => {
+
+  class TimePicker {
+
+    constructor() {
+      this.init()
+    }
+
+    init() {
+
+      if(this.initialized)
+        return false
+
+      this.initialized = true
+      this.setupHooks()
+
+    }
+
+    setupHooks() {
+
+      this.bodyClick = (evt) => {
+
+        if(evt.target.nodeName === 'SELECT')
+          return false
+
+        let timer = this.getTimer()
+
+        if(timer)
+          if(!timer.classList.contains('active'))
+            document.body.removeChild(timer)
+          else if(!this.isInTimer(evt.target)) {
+            return this.cleanupTimer(evt, timer)
+          }
+
+        document.body.removeEventListener('click', this.bodyClick, false);
+
+      }
+
+      this.bodyInput = (evt) => {
+        const {keyCode} = evt
+
+        if (keyCode != 13 && keyCode != 27)
+          return true
+
+        if (keyCode == 27) {
+          // user is dismissing by pressing the Esc. key
+          // reset the value back to the original value
+          if (this.hasOwnProperty("originalValue")) {
+            this.source.value = this.originalValue
+          }
+        }
+
+        // user has pressed the enter key. Assume to be a confirmation
+        if (this.hasOwnProperty("originalValue"))
+          delete [this.originalValue]
+
+        this.cleanupTimer(undefined, this.getTimer())
+
+        return true
+      }
+
+      const didChange = () => {
+
+        // let target = evt.target
+        let timer = this.getTimer()
+
+        let hours = parseInt(timer.children[0].value)
+        let minutes = parseInt(timer.children[1].value)
+        let shift = parseInt(timer.children[2].value)
+
+        if(shift === 1 && hours != 12)
+          hours += 12
+
+        if(hours === 12 && shift === 0)
+          hours = '00'
+
+        if(this.source.nodeName === 'INPUT') {
+          this.source.value = hours + ':' + minutes
+          if ('InputEvent' in window)
+            this.source.dispatchEvent(new InputEvent('input'))
+          else
+            this.source.dispatchEvent(new Event('input'))
+        }
+
+        let fn = window[this.source.dataset.onchange]
+        if(fn) fn({
+          string: hours + ':' + minutes,
+          hours: parseInt(hours),
+          minutes: minutes
+        })
+
+      }
+
+      const triggerClick = (evt) => {
+
+        let phantom = this.getTimer()
+
+        if(phantom) {
+          this.cleanupTimer(evt, phantom)
+          setTimeout(() => {
+            triggerClick(evt)
+          }, 300)
+          return false
+        }
+
+        let rect = evt.target.getBoundingClientRect()
+        let center = {
+          x: rect.left,
+          y: rect.top + rect.height
+        }
+
+        this.source = evt.target
+
+        let timer = this.drawTimer()
+
+        mutate(() => {
+          document.body.insertAdjacentHTML('beforeEnd', timer)
+        })
+        .then(() => {
+          timer = this.getTimer()
+
+          // set the current time
+          if(this.source.nodeName !== 'INPUT' || !this.source.value.length) {
+            let date = new Date()
+            let hours = date.getHours(),
+              minutes = date.getMinutes()
+
+            return mutate(() => {
+              timer.children[0].value = hours > 12 ? hours - 12 : hours
+              timer.children[1].value = minutes
+              timer.children[2].value = hours >= 12 ? 1 : 0
+            })
+          }
+
+          return Promise.resolve()
+        })
+        .then(() => {
+          // add the hooks
+          Array.prototype.slice.call(timer.children).forEach((item) => {
+            item.addEventListener('change', didChange, false)
+          })
+
+          return measure(() => timer.getBoundingClientRect())
+        })
+        .then(result => {
+          // position the calendar near the origin point
+          const timerRect = result
+
+          // the width before showing = actual width * 0.25
+          const width = timerRect.width * 4
+
+          timer.style.left = (center.x - 16) + 'px'
+          timer.style.top = (center.y) + 'px'
+
+          return mutate(() => {
+            timer.classList.add('active')
+
+            this.source.setAttribute("aria-expanded", "true")
+            if (this.source.hasAttribute("id")) {
+              timer.setAttribute("aria-describedby", this.source.getAttribute("id"))
+            }
+          })
+        })
+        .then(() => {
+          timer.querySelector("select").focus()
+          this.originalValue = this.source.value
+          document.body.addEventListener('click', this.bodyClick, false)
+          document.body.addEventListener('keydown', this.bodyInput, false)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
+        return false
+
+      }
+
+      const attachTrigger = (elem) => {
+        if(!elem) return
+        elem.addEventListener('click', triggerClick, false)
+        if(elem.nodeName === "INPUT") {
+          elem.addEventListener('focus', inputFocus, false)
+          elem.addEventListener('blur', inputBlur, false)
+          elem.setAttribute("aria-haspopup", "true")
+          elem.setAttribute("aria-expanded", "false")
+        }
+      }
+
+      let triggers = Array.prototype.slice.call(document.querySelectorAll('.timer-trigger'))
+
+      triggers.forEach((item) => {
+        attachTrigger(item)
+      })
+
+      window.attachTimeTrigger = attachTrigger
+
+    }
+
+    getTimer() {
+      return document.getElementById('dz-timer')
+    }
+
+    isInTimer(elem) {
+      let parent = findParent(elem, 'dz-timer')
+      return parent !== document.body && parent != undefined
+    }
+
+    drawTimer() {
+
+      let val = null, hoursVal, minVal, shiftVal = false
+      if(this.source.nodeName === 'INPUT')
+        val = this.source.value
+
+      if(val) {
+        val = val.split(':')
+        hoursVal = parseInt(val[0])
+        minVal = val[1]
+
+        if(hoursVal >= 12)
+          shiftVal = true
+      }
+
+      let markup = `<div id="dz-timer" class="inline-container" role="dialog" aria-label="Time picker">
+        <select class="hours">`
+
+      // draw hours dropdown
+      let hours = Array.from(Array(13).keys())
+      hours.shift()
+      markup += hours
+        .map((item) => {
+          if(item === hoursVal)
+            return `<option value='${item}' selected='selected'>${item}</option>`
+          return `<option value='${item}'>${item}</option>`
+        }).join(' ')
+
+      markup += `</select>
+        <select class="minutes">`
+
+      // draw minutes dropdown
+      markup += Array.from(Array(60).keys())
+      .map((item) => {
+        if(item.toString().length === 1)
+          item = '0' + item
+        if(item.toString() === minVal)
+          return `<option value='${item}' selected='selected'>${item}</option>`
+        return `<option value='${item}'>${item}</option>`
+      }).join(' ')
+
+      // AM, PM
+      markup += `</select>
+        <select class="shift">
+          <option value='0' ${!shiftVal?"selected='selected'" : ''}>AM</option>
+          <option value='1' ${shiftVal?"selected='selected'" : ''}>PM</option>
+        </select>`
+
+      markup +=`</select>
+      </div>`
+
+      return markup
+    }
+
+    cleanupTimer(evt, timer) {
+      if(evt && evt.preventDefault)
+        evt.preventDefault()
+
+      if(timer) {
+
+        mutate(() => {
+          timer.classList.remove('active')
+        })
+        .then(() => wait(500))
+        .then(() => {
+          this.source = undefined
+          if(timer.parentNode)
+            document.body.removeChild(timer)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
+      }
+
+      document.body.removeEventListener('click', this.bodyClick, false)
+      document.body.removeEventListener('keydown', this.bodyInput, false)
+
+      return false
+    }
+
+  }
+
+  if(glob && glob.exports) {
+    glob.exports = Object.assign({}, {
+      'TimePicker': TimePicker,
+      'timePicker': new TimePicker()
+    })
+  }
+  else {
+    glob.TimePicker = TimePicker
+    glob.timePicker = new TimePicker()
+  }
+
+})(typeof module === "undefined" ? window : module);
+
+((glob) => {
+  class RangePicker {
+    constructor(elem) {
+        this.elem = elem
+        this.initialized = false
+        this.init()
+    }
+
+    init () {
+      if (!this.elem)
+        return
+
+      if (this.initialized)
+        return
+      this.initialized = true
+
+      let time = +new Date()
+
+      this.startElem = this.elem.querySelector('.range-start')
+      this.endElem = this.elem.querySelector('.range-end')
+
+      this.startElem.setAttribute("type", "text")
+      this.endElem.setAttribute("type", "text")
+      
+      this.startElem.classList.add('start'+time)
+      this.endElem.classList.add('end'+time)
+
+      this.startController = new DatePicker('start'+time)
+      this.endController = new DatePicker('end'+time)
+
+      this.startController.callback = this.callback.bind(this)
+      this.endController.callback = this.startController.callback
+    }
+
+    callback() {
+      let args = [...arguments]
+      let elem = args[0]
+      let val = args[1]
+
+      let isStart = elem.classList.contains('range-start')
+
+      if (isStart)
+        this.start = val
+      else
+        this.end = val
+
+      if (isStart) {
+        // update the min-date of the end-range
+        this.endElem.dataset.dateMin = val
+      }
+      else {
+        // update the max-date of the start-range
+        this.startElem.dataset.dateMax = val
+      }
+    }
+  }
+
+  if (glob.hasOwnProperty('exports'))
+    glob.exports = Object.assign({}, glob.exports, RangePicker)
+  else
+    glob.RangePicker = RangePicker
+
+})(typeof module === "undefined" ? window : module);
+
+((glob) => {
+
+  if (!glob)
+    return; // exit early as we only wish to target the browser environment
+
+  /*
+   * we check early if the browser natively supports 
+   * input[type="date"], 
+   * input[type="time"], 
+   * input[type="datetime-local"]
+   */
+
+  let checks = {
+    'date': false,
+    'time': false,
+    'datetime-local': false
+  }
+
+  let input = document.createElement("input")
+  
+  Object.keys(checks).forEach(key => {
+    input.type = key
+    // if the input type is the same as we set it, it is supported by the browser
+    checks[key] = input.type === key 
+  })
+
+  const DATE_TIME_EXP = /([\d]{4}\-[\d]{2}\-[\d]{2})T([\d]{2}\:[\d]{2})/
+
+  const hookTime = () => {
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="time"]'))
+    inputs.forEach(attachTimeTrigger)
+  }
+
+  const hookDate = () => {
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="date"]'))
+    inputs.forEach(attachDateTrigger)
+  }
+
+  const hookDateTime = () => {
+    /* 
+     * when datetime-local is not supported, 
+     * we split the current input into two separate inputs. 
+     * One for date, the other for time.
+     * We set the original input elem to "hidden" and manipulate
+     * it's value so the user still retains the name of that field in the form
+     */
+    let inputs = Array.prototype.slice.call(document.querySelectorAll('input[type="datetime-local"]'))
+    inputs.forEach(elem => {
+      
+      // create a reference for the parent node because we need it later
+      const input = elem
+      const container = input.parentNode
+      const getTarget = () => container.querySelector("input[data-original='datetime-local']")
+
+      let value = input.value,
+        hasValue = value.trim().length > 0,
+        date = null,
+        time = null
+      
+      if (hasValue && DATE_TIME_EXP.test(value)) {
+        date = value.replace(DATE_TIME_EXP, "$1")
+        time = value.replace(DATE_TIME_EXP, "$2")
+      }
+      
+      const dateChange = evt => {
+        let target = getTarget()
+        target.dataset.date = evt.target.value
+      }
+
+      const timeChange = evt => {
+        let target = getTarget()
+        target.dataset.time = evt.target.value
+      }
+
+      // define a custom getter for value which utilizes the above two dataset values
+      input.__defineGetter__("value", function() {
+        return ((this.dataset.date||"" )+ " " + (this.dataset.time||"")).trim()
+      })
+
+      // set the type to hidden so it's still in the DOM, but not visible to the user
+      input.type = "hidden"
+      // set this custom dataset prop so we can query for it later
+      input.dataset.original = "datetime-local"
+      
+      // create our new date input
+      let inDate = document.createElement("input")
+      inDate.type = checks.date ? "date" : "text"
+      inDate.placeholder = "Date"
+      inDate.oninput = dateChange;
+
+      if (date)
+        inDate.value = date
+
+      // check if date-min and date-max are set
+      let {dateMin, dateMax} = input.dataset
+      if (dateMin)
+        inDate.dataset.dateMin = dateMin
+      if (dateMax)
+        inDate.dataset.dateMax = dateMax
+
+      // create our new time input
+      let inTime = document.createElement("input")
+      inTime.type = checks.time ? "time" : "text"
+      inTime.placeholder = "Time"
+      inTime.oninput = timeChange;
+
+      if (time)
+        inTime.value = time;
+      
+      [inDate, inTime].forEach(inp => {
+        inp.__defineGetter__("required", function() {
+          return input.required
+        })
+
+        inp.__defineGetter__("validity", function() {
+          return input.validity
+        })
+
+        inp.__defineGetter__("pattern", function() {
+          return input.pattern
+        })
+
+        inp.__defineGetter__("validationMessage", function() {
+          return input.validationMessage
+        })
+
+        inp.__defineSetter__("validationMessage", function(val) {
+          input.validationMessage = val
+        })
+      })
+
+      // add them to the DOM after the OG
+      container.insertAdjacentElement("beforeEnd", inDate)
+      container.insertAdjacentElement("beforeEnd", inTime)
+
+      // attach the triggers
+      attachDateTrigger(inDate)
+      attachTimeTrigger(inTime)
+    })
+  }
+
+  if (!checks.date)
+    hookDate()
+  if (!checks.time)
+    hookTime()
+  if (!checks['datetime-local'])
+    hookDateTime()
+
+  // expose functions to the window
+  glob.hookDate = hookDate;
+  glob.hookTime = hookTime;
+  glob.hookDateTimer = hookDateTime;
+
+})(typeof module === "undefined" ? window : undefined);
+
 //# sourceMappingURL=dzdatetimepicker-dist.js.map

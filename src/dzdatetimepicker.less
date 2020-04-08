@@ -39,7 +39,7 @@
 
     background: var(--dzdp-color-base);
 
-    box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.16), 0px -1px 1px 0px rgba(0,0,0,0.07), 0px 2px 4px 0px rgba(0,0,0,0.20);
+    box-shadow: ~"0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px var(--dzdp-color-border), 0 4px 21px rgba(0,0,0,0.08)";
 
     border-radius: 8px;
 
@@ -220,47 +220,47 @@
                 color: var(--dzdp-color-red);
                 font-weight: 600;
 
-            &:before {
-                .onHover();
-                background-color: var(--dzdp-hover-color);
-                will-change: background;
-                transition: background 0.2s ease;
-            }
-
-            &:hover {
                 &:before {
+                    .onHover();
                     background-color: var(--dzdp-hover-color);
+                    will-change: background;
+                    transition: background 0.2s ease;
                 }
+
+                &:hover {
+                    &:before {
+                        background-color: var(--dzdp-hover-color);
+                    }
+                }
+
             }
 
-        }
+            &.selected {
 
-        &.selected {
-
-            color: white;
-            
-            &:before {
-                .onHover();
-                will-change: background;
-                transition: background 0.2s ease;
-                background-color: var(--dzdp-color-blue);
-            }
-
-            &:hover {
-                color: var(--dzdp-color-blue);
+                color: white;
+                
                 &:before {
-                    background-color: var(--dzdp-hover-color);
+                    .onHover();
+                    will-change: background;
+                    transition: background 0.2s ease;
+                    background-color: var(--dzdp-color-blue);
                 }
+
+                &:hover {
+                    color: var(--dzdp-color-blue);
+                    &:before {
+                        background-color: var(--dzdp-hover-color);
+                    }
+                }
+
+            }
+
+            &.disabled {
+                pointer-events: none;
+                opacity: 0.5;
             }
 
         }
-
-        &.disabled {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-    }
 
     }
   
@@ -275,6 +275,7 @@
     :root {
 
         --dzdp-color-base: var(--color-base2, rgba(44, 44, 48, 1));
+        --dzdp-hover-color: var(--color-base3, rgba(50, 50, 54, 1));
 
         // --dzdp-color-title: rgba(255, 255, 255, 1);
         // --dzdp-color-text: rgba(248, 248, 250, 1);
@@ -283,6 +284,10 @@
         // --dzdp-hover-color: rgba(60, 60, 64, 1);
         // --dzdp-color-blue: rgb(10, 132, 255);
         // --dzdp-color-red: rgb(255, 69, 58);
+    }
+
+    #dz-calendar, #dz-timer {
+        box-shadow: ~"0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px var(--dzdp-color-border), 0 4px 21px rgba(0,0,0,1)";
     }
 
     #dz-calendar {
@@ -298,10 +303,29 @@
             button {
                 border: none;
                 box-shadow: none;
-                background-color: transparent;
+                
+                &.selected {
+
+                    &:before {
+                        background-color: var(--dzdp-color-red);
+                    }
+
+                    &:hover {
+                        
+                        color: var(--dzdp-color-red);
+
+                        &:before {
+                            background-color: var(--dzdp-hover-color);
+                        }
+
+                    }
+
+                }
+
             }
 
         }
 
     }
+
 }
