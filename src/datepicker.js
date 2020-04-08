@@ -437,7 +437,7 @@
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         }
         else {
-          markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+          markup += `<button style="margin-left:${offsetDay * 35}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         }
 
       })
