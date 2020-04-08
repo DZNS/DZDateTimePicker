@@ -1,80 +1,82 @@
 /* DZDateTimePicker */
 
 :root {
-    --dzdp-color-border: rgba(0,0,0,.12);
-    --dzdp-color-base: rgba(255, 255, 255, 1);
+    --dzdp-color-border: var(--color-border, rgba(0,0,0,.12));
+    --dzdp-color-base: var(--color-base, rgba(255, 255, 255, 1));
     
-    --dzdp-color-title: rgba(0, 0, 0, 1);
-    --dzdp-color-text: rgba(10, 10, 12, 1);
-    --dzdp-color-days: rgba(40, 40, 40, 1);
+    --dzdp-color-title: var(--color-title, rgba(0, 0, 0, 1));
+    --dzdp-color-text: var(--color-text, rgba(10, 10, 12, 1));
+    --dzdp-color-days: var(--color-subtext, rgba(40, 40, 40, 1));
 
-    --dzdp-hover-color: rgba(238, 238, 238, 1);
-    --dzdp-color-blue: rgb(0, 122, 255);
-    --dzdp-color-red: rgb(255, 59, 48);
+    --dzdp-hover-color: var(--color-base2, rgba(238, 238, 238, 1));
+    --dzdp-color-blue: var(--color-blue, rgb(0, 122, 255));
+    --dzdp-color-red: var(--color-red, rgb(255, 59, 48));
 }
 
 .hideText() {
-  text-indent: 1000%;
-  white-space: nowrap;
-  overflow: hidden;
+    text-indent: 1000%;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .monospaced() { font-feature-settings: "tnum"; }
 
 .date-trigger, .timer-trigger {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #dz-calendar, #dz-timer {
-  padding-top: 8px;
-  padding-bottom: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
 
-  width: 245px;
-  height: auto;
-  display: block;
+    width: 245px;
+    height: auto;
+    display: block;
 
-  padding-bottom: 8px;
+    padding-bottom: 8px;
 
-  position: absolute;
+    position: absolute;
 
-  background: var(--dzdp-color-base);
-  box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.16), 0px -1px 1px 0px rgba(0,0,0,0.07), 0px 2px 4px 0px rgba(0,0,0,0.20);
-  border-radius: 2px;
+    background: var(--dzdp-color-base);
 
-  z-index: 3;
+    box-shadow: ~"0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px var(--dzdp-color-border), 0 4px 21px rgba(0,0,0,0.08)";
 
-  transform: scale(0.25);
-  transform-origin: 50% top;
-  opacity: 0;
-  will-change: transform, opacity;
+    border-radius: 8px;
 
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  pointer-events: none;
+    z-index: 3;
 
-  &.active {
-      transform: scale(1);
-      opacity: 1;
-      pointer-events: auto;
-  }
+    transform: scale(0.25);
+    transform-origin: 50% top;
+    opacity: 0;
+    will-change: transform, opacity;
 
-  &:before {
-      content: '';
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      pointer-events: auto;
-      transform: rotate(45deg);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    pointer-events: none;
 
-      z-index: 2;
+    &.active {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+    }
 
-      position: absolute;
-      left: 50%;
-      top: -6px;
-      margin-left: -6px;
+    &:before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        pointer-events: auto;
+        transform: rotate(45deg);
 
-      background-color: var(--dzdp-color-base);
-      box-shadow: -1px -1px 2px rgba(0,0,0,.2);
-  }
+        z-index: 2;
+
+        position: absolute;
+        left: 50%;
+        top: -6px;
+        margin-left: -6px;
+
+        background-color: var(--dzdp-color-base);
+        box-shadow: -1px -1px 2px rgba(0,0,0,.2);
+    }
 }
 
 #dz-calendar {
@@ -155,106 +157,112 @@
     
     }
   
-  .dz-dates {
-    width: 100%;
-    height: auto;
+    .dz-dates {
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-wrap: wrap;
     
-    > div {
-      width: 35px;
-      height: 24px;
-      display: inline-block;
+        > button {
+            // width: 35px;
+            flex: 0 0 35px;
+            height: 24px;
+            display: inline-block;
 
-      background-color: inherit;
-      box-shadow: none;
-      
-      text-align: center;
-      line-height: 24px;
-      font-weight: normal;
-      font-size: 13px;
-      .monospaced();
-      
-      color: var(--dzdp-color-text);
-      
-      position: relative;
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
 
-      padding: 0;
-      text-transform: none;
-      border-radius: 0;
-      
-      .onHover() {
-        content: '';
-        width: 24px;
-        height: 24px;
-        display: block;
+            text-align: center;
+            line-height: 24px;
+            font-weight: normal;
+            font-size: 13px;
+            .monospaced();
 
-        position: absolute;
-        left: 6px;
-        top: 0px;
+            color: var(--dzdp-color-text);
 
-        z-index: -1;
+            position: relative;
 
-        border-radius: 12px;
+            padding: 0;
+            text-transform: none;
+            border-radius: 0;
 
-        background-color: var(--dzdp-hover-color);
-      }
-      
-      &:hover {
-        cursor: pointer;
-        color: var(--color-title);
-        
-        &:before {
-          .onHover();
+            .onHover() {
+                content: '';
+                width: 24px;
+                height: 24px;
+                display: block;
+
+                position: absolute;
+                left: 6px;
+                top: 0px;
+
+                z-index: -1;
+
+                border-radius: 12px;
+
+                background-color: var(--dzdp-hover-color);
+            }
+
+            &:hover {
+                cursor: pointer;
+                color: var(--color-title);
+
+                &:before {
+                    .onHover();
+                }
+
+            }
+
+            &.today {
+
+                color: var(--dzdp-color-red);
+                font-weight: 600;
+
+                &:before {
+                    .onHover();
+                    background-color: var(--dzdp-hover-color);
+                    will-change: background;
+                    transition: background 0.2s ease;
+                }
+
+                &:hover {
+                    &:before {
+                        background-color: var(--dzdp-hover-color);
+                    }
+                }
+
+            }
+
+            &.selected {
+
+                color: white;
+                
+                &:before {
+                    .onHover();
+                    will-change: background;
+                    transition: background 0.2s ease;
+                    background-color: var(--dzdp-color-blue);
+                }
+
+                &:hover {
+                    color: var(--dzdp-color-blue);
+                    &:before {
+                        background-color: var(--dzdp-hover-color);
+                    }
+                }
+
+            }
+
+            &.disabled {
+                pointer-events: none;
+                opacity: 0.5;
+            }
+
         }
-        
-      }
-      
-      &.today {
-        
-        color: var(--dzdp-color-red);
-        font-weight: 600;
-        
-        &:before {
-          .onHover();
-          background-color: var(--dzdp-hover-color);
-          will-change: background;
-          transition: background 0.2s ease;
-        }
-        
-        &:hover {
-          &:before {
-            background-color: var(--dzdp-hover-color);
-          }
-        }
-        
-      }
 
-      &.selected {
-
-        color: white;
-        &:before {
-          .onHover();
-          will-change: background;
-          transition: background 0.2s ease;
-          background-color: var(--dzdp-color-blue);
-        }
-
-        &:hover {
-          color: var(--dzdp-color-blue);
-          &:before {
-            background-color: var(--dzdp-hover-color);
-          }
-        }
-
-      }
-      
-      &.disabled {
-        pointer-events: none;
-        opacity: 0.5;
-      }
-      
     }
-    
-  }
   
 }
 
@@ -265,16 +273,21 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --dzdp-color-border: rgba(0,0,0,.12);
-        --dzdp-color-base: rgba(44, 44, 48, 1);
 
-        --dzdp-color-title: rgba(255, 255, 255, 1);
-        --dzdp-color-text: rgba(248, 248, 250, 1);
-        --dzdp-color-days: rgba(200, 200, 200, 1);
+        --dzdp-color-base: var(--color-base2, rgba(44, 44, 48, 1));
+        --dzdp-hover-color: var(--color-base3, rgba(50, 50, 54, 1));
 
-        --dzdp-hover-color: rgba(60, 60, 64, 1);
-        --dzdp-color-blue: rgb(10, 132, 255);
-        --dzdp-color-red: rgb(255, 69, 58);
+        // --dzdp-color-title: rgba(255, 255, 255, 1);
+        // --dzdp-color-text: rgba(248, 248, 250, 1);
+        // --dzdp-color-days: rgba(200, 200, 200, 1);
+
+        // --dzdp-hover-color: rgba(60, 60, 64, 1);
+        // --dzdp-color-blue: rgb(10, 132, 255);
+        // --dzdp-color-red: rgb(255, 69, 58);
+    }
+
+    #dz-calendar, #dz-timer {
+        box-shadow: ~"0 2px 6px rgba(0,0,0,0.12), inset 0 0 0 1px var(--dzdp-color-border), 0 4px 21px rgba(0,0,0,1)";
     }
 
     #dz-calendar {
@@ -285,5 +298,34 @@
             }
         }
 
+        .dz-dates {
+
+            button {
+                border: none;
+                box-shadow: none;
+                
+                &.selected {
+
+                    &:before {
+                        background-color: var(--dzdp-color-red);
+                    }
+
+                    &:hover {
+                        
+                        color: var(--dzdp-color-red);
+
+                        &:before {
+                            background-color: var(--dzdp-hover-color);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
     }
+
 }

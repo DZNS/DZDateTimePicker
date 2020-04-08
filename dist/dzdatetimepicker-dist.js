@@ -277,7 +277,8 @@ window.wait = window.wait || async function (milliseconds = 0) {
           return false
         }
 
-        let rect = evt.target.getBoundingClientRect()
+        let rect = evt.target.getBoundingClientRect();
+
         let center = {
           x: rect.left + (rect.width / 2),
           y: rect.top + rect.height
@@ -305,11 +306,15 @@ window.wait = window.wait || async function (milliseconds = 0) {
           // the width before showing = actual width * 0.25
           let width = calendarRect.width * 4
 
-          calendar.style.left = (center.x - width/2) + 'px'
-          calendar.style.top = (center.y - rect.height) + 'px'
+          calendar.style.left = (center.x - width/2) + 'px';
 
-          let prev = calendar.children[0].children[1]
-          let next = calendar.children[0].children[2]
+          // center.y + half of the pointer's height
+          calendar.style.top = (center.y + 6) + 'px'; 
+
+          console.debug(calendar.style.top);
+
+          let prev = calendar.children[0].children[1];
+          let next = calendar.children[0].children[2];
 
           prev.addEventListener('click', prevClick, false)
           next.addEventListener('click', nextClick, false)
@@ -418,7 +423,8 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
     drawDates(dates) {
 
-      let now = new Date()
+      let now = new Date();
+      let today = new Date();
 
       if(this.source.nodeName === 'INPUT' && this.source.value)
         now = new Date(this.source.value)
@@ -451,22 +457,26 @@ window.wait = window.wait || async function (milliseconds = 0) {
         let classes = [];
 
         // check if the date is today
-        if (dateEqual(now, date))
-          classes.push('today')
+        if (dateEqual(today, date)) {
+          classes.push('today');
+        }
 
         // check if this is the selected value
-        if(val && dateEqual(date, val))
-          classes.push('selected')
+        if(val && dateEqual(date, val)) {
+          classes.push('selected');
+        }
 
         // check if the date is within the min range, if one is set
-        if(dateMin && (dateMin.getTime() - date.getTime()) > 0)
-          classes.push('disabled')
+        if(dateMin && (dateMin.getTime() - date.getTime()) > 0) {
+          classes.push('disabled');
+        }
 
         // check if the date is within the max range, if one is set
-        if(dateMax && (dateMax.getTime() - date.getTime()) < 0)
-          classes.push('disabled')
+        if(dateMax && (dateMax.getTime() - date.getTime()) < 0) {
+          classes.push('disabled');
+        }
 
-        classes = classes.join(' ')
+        classes = classes.join(' ');
 
         const days = {
           "Mon": "Monday",
@@ -478,19 +488,21 @@ window.wait = window.wait || async function (milliseconds = 0) {
           "Sun": "Sunday"
         }
 
-        let ariaString = date.toDateString()
-        ariaString = [ariaString.substr(0,3), ariaString.substr(4)]
-        ariaString[0] = `${days[ariaString[0]]}, `
+        let ariaString = date.toDateString();
+        ariaString = [ariaString.substr(0,3), ariaString.substr(4)];
+        ariaString[0] = `${days[ariaString[0]]}, `;
 
-        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)]
-        ariaString[1][0] = this.getFullMonthName(date.getMonth())
-        ariaString[1] = ariaString[1].join(" ")
-        ariaString = ariaString.join("")
+        ariaString[1] = [ariaString[1].substr(0,3), ariaString[1].substr(4)];
+        ariaString[1][0] = this.getFullMonthName(date.getMonth());
+        ariaString[1] = ariaString[1].join(" ");
+        ariaString = ariaString.join("");
 
-        if (idx !== 0)
+        if (idx !== 0) {
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
-        else
+        }
+        else {
           markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+        }
 
       })
 
