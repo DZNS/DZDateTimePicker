@@ -46,12 +46,20 @@
 
       if (isStart) {
         // update the min-date of the end-range
-        this.endElem.dataset.dateMin = val
+        // this needs to be adjusted such that
+        // the min-date also includes the selected date
+        // for single day ranges.
+        
+        const selected = new Date(val);
+
+        const newMax = new Date(selected.setDate(selected.getDate() - 1));
+
+        const month = DatePicker.zeroPaddedFormatMonth(newMax);
+        const dateStr = DatePicker.zeroPaddedFormatDate(newMax);
+        
+        this.endElem.dataset.dateMin = `${newMax.getFullYear()}-${month}-${dateStr}`
       }
-      else {
-        // update the max-date of the start-range
-        this.startElem.dataset.dateMax = val
-      }
+
     }
   }
 

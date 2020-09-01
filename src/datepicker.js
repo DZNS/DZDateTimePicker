@@ -159,13 +159,10 @@
           fn(date)
 
         // zero pad the month if needed
-        let month = date.getMonth() + 1
-        if(month.toString().length === 1)
-          month = "0" + month
+        let month = DatePicker.zeroPaddedFormatMonth(date);
+
         // zero pad the date if needed
-        let dateStr = date.getDate()
-        if(dateStr.toString().length === 1)
-          dateStr = "0" + dateStr
+        let dateStr = DatePicker.zeroPaddedFormatDate(date);
 
         let val = [date.getFullYear(), month, dateStr].join('-')
 
@@ -543,6 +540,31 @@
       }
 
       return false
+
+    }
+
+    static zeroPaddedFormatMonth (date) {
+
+      let month = date.getMonth() + 1;
+
+      if (month.toString().length === 1) {
+        month = "0" + month
+      }
+
+      return month;
+
+    }
+
+    static zeroPaddedFormatDate (date) {
+
+      // zero pad the date if needed
+      let dateStr = date.getDate()
+
+      if (dateStr.toString().length === 1) {
+        dateStr = "0" + dateStr
+      }
+
+      return dateStr;
 
     }
 
