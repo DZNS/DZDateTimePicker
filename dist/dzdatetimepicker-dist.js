@@ -223,13 +223,10 @@ window.wait = window.wait || async function (milliseconds = 0) {
           fn(date)
 
         // zero pad the month if needed
-        let month = date.getMonth() + 1
-        if(month.toString().length === 1)
-          month = "0" + month
+        let month = DatePicker.zeroPaddedFormatMonth(date);
+
         // zero pad the date if needed
-        let dateStr = date.getDate()
-        if(dateStr.toString().length === 1)
-          dateStr = "0" + dateStr
+        let dateStr = DatePicker.zeroPaddedFormatDate(date);
 
         let val = [date.getFullYear(), month, dateStr].join('-')
 
@@ -501,7 +498,7 @@ window.wait = window.wait || async function (milliseconds = 0) {
           markup += `<button aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         }
         else {
-          markup += `<button style="margin-left:${offsetDay * 36}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
+          markup += `<button style="margin-left:${offsetDay * 35}px;" aria-label="${ariaString}" class="${classes}">${date.getDate()}</button>`
         }
 
       })
@@ -607,6 +604,31 @@ window.wait = window.wait || async function (milliseconds = 0) {
       }
 
       return false
+
+    }
+
+    static zeroPaddedFormatMonth (date) {
+
+      let month = date.getMonth() + 1;
+
+      if (month.toString().length === 1) {
+        month = "0" + month
+      }
+
+      return month;
+
+    }
+
+    static zeroPaddedFormatDate (date) {
+
+      // zero pad the date if needed
+      let dateStr = date.getDate()
+
+      if (dateStr.toString().length === 1) {
+        dateStr = "0" + dateStr
+      }
+
+      return dateStr;
 
     }
 
@@ -976,12 +998,20 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
       if (isStart) {
         // update the min-date of the end-range
-        this.endElem.dataset.dateMin = val
+        // this needs to be adjusted such that
+        // the min-date also includes the selected date
+        // for single day ranges.
+        
+        const selected = new Date(val);
+
+        const newMax = new Date(selected.setDate(selected.getDate() - 1));
+
+        const month = DatePicker.zeroPaddedFormatMonth(newMax);
+        const dateStr = DatePicker.zeroPaddedFormatDate(newMax);
+        
+        this.endElem.dataset.dateMin = `${newMax.getFullYear()}-${month}-${dateStr}`
       }
-      else {
-        // update the max-date of the start-range
-        this.startElem.dataset.dateMax = val
-      }
+
     }
   }
 
