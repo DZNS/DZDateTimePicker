@@ -207,6 +207,11 @@ window.wait = window.wait || async function (milliseconds = 0) {
            // the above click will automatically clean up the calendar
         }
 
+        if (keyCode == 27) {
+          // esc key
+          this.cleanupCalendar(evt, this.calendar);
+        }
+
         return true
       }
 
@@ -261,12 +266,15 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
       }
 
+      let fromFocus = false;
+
       const triggerClick = (evt) => {
 
         // check if calendar is already being shown
         let phantom = this.getCalendar()
 
-        if(phantom) {
+        if(phantom && phantom != this.calendar) {
+
           this.cleanupCalendar(evt, phantom)
           setTimeout(() => {
             triggerClick(evt)
@@ -294,6 +302,7 @@ window.wait = window.wait || async function (milliseconds = 0) {
         })
         .then(() => {
           calendar = document.getElementById('dz-calendar')
+          this.calendar = calendar
           return measure(() => calendar.getBoundingClientRect())
         })
         .then(result => {
@@ -305,8 +314,11 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
           calendar.style.left = (center.x - width/2) + 'px';
 
+          const targetRect = target.getBoundingClientRect();
+
           // center.y + half of the pointer's height
-          calendar.style.top = (center.y + 6) + 'px'; 
+          // 193 is height of the calendar
+          calendar.style.top = (center.y + 36) + 'px'; 
 
           console.debug(calendar.style.top);
 
@@ -369,12 +381,15 @@ window.wait = window.wait || async function (milliseconds = 0) {
 
       const attachTrigger = (elem) => {
         if(!elem) return
-        elem.addEventListener('click', triggerClick, false)
+        
         if(elem.nodeName === "INPUT") {
-          elem.addEventListener('focus', inputFocus, false)
+          elem.addEventListener('focus', triggerClick, false)
           elem.addEventListener('blur', inputBlur, false)
           elem.setAttribute("aria-haspopup", "true")
           elem.setAttribute("aria-expanded", "false")
+        }
+        else {
+          elem.addEventListener('click', triggerClick, false)
         }
       }
 
@@ -579,6 +594,7 @@ window.wait = window.wait || async function (milliseconds = 0) {
       if(calendar) {
 
         mutate(() => {
+          document.activeElement.blur();
           calendar.classList.remove('active')
         })
         .then(() => wait(300))
