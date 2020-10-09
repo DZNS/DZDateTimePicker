@@ -383,7 +383,7 @@ window.wait = window.wait || async function (milliseconds = 0) {
         if(!elem) return
         
         if(elem.nodeName === "INPUT") {
-          elem.addEventListener('focus', triggerClick, false)
+          elem.addEventListener('click', triggerClick, false)
           elem.addEventListener('blur', inputBlur, false)
           elem.setAttribute("aria-haspopup", "true")
           elem.setAttribute("aria-expanded", "false")
